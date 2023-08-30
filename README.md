@@ -5,3 +5,5 @@
 ## Oleh : 
 Nama : **Raden Francisco Trianto Bratadiningrat**  
 NIM : **13522091** 
+Jurusan : Teknik Informatika'22
+Fakultas : STEI - Komputasi
