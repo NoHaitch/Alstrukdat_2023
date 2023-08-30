@@ -2,16 +2,17 @@
 
 int main()
 {
-    int n, i, sum;
-    i = 0;
+    int n, count, sum;
+    count = 0;
     sum = 0;
     scanf("%d", &n);
-    while (i < 4)
+    do
     {
         sum += n % 10;
-        n = (n - (n % 10)) / 10;
-        i++;
-    }
+        n /= 10;
+        ++count;
+    } while (n != 0);
     printf("%d\n", sum);
+
     return 0;
 }
