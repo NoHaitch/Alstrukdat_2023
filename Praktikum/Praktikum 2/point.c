@@ -1,3 +1,9 @@
+// File point.c
+// Raden Francicso Trianto Bratadiningrat
+// 13522091
+// Pra Praktikum 2 Algoritma dan Struktur Data
+// 30 Agustus 2022
+
 #include <stdio.h>
 #include <math.h>
 #include "point.h"
