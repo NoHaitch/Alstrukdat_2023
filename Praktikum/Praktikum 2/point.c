@@ -2,17 +2,17 @@
 #include <math.h>
 #include "point.h"
 
-void CreatePoint(POINT *P, float x, float y)
+void CreatePoint(POINT *P, float X, float Y)
 {
-    Absis(*P) = x;
-    Ordinat(*P) = y;
+    Absis(*P) = X;
+    Ordinat(*P) = Y;
 }
 
 void BacaPOINT(POINT *P)
 {
-    float x, y;
-    scanf("%f %f", &x, &y);
-    CreatePoint(P, x, y);
+    float X, Y;
+    scanf("%f %f", &X, &Y);
+    CreatePoint(P, X, Y);
 }
 
 void TulisPOINT(POINT P)
@@ -22,62 +22,27 @@ void TulisPOINT(POINT P)
 
 boolean EQ(POINT P1, POINT P2)
 {
-    if (Absis(P1) == Absis(P2) && Ordinat(P1) == Ordinat(P2))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Absis(P1) == Absis(P2) && Ordinat(P1) == Ordinat(P2);
 }
 
 boolean NEQ(POINT P1, POINT P2)
 {
-    if (Absis(P1) == Absis(P2) && Ordinat(P1) == Ordinat(P2))
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return !(EQ(P1, P2));
 }
 
 boolean IsOrigin(POINT P)
 {
-    if (Absis(P) == 0 && Ordinat(P) == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Absis(P) == 0 && Ordinat(P) == 0;
 }
 
 boolean IsOnSbX(POINT P)
 {
-    if (Ordinat(P) == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Ordinat(P) == 0;
 }
 
 boolean IsOnSbY(POINT P)
 {
-    if (Absis(P) == 0)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return Absis(P) == 0;
 }
 
 int Kuadran(POINT P)

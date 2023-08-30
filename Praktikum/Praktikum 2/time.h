@@ -10,9 +10,9 @@
 /* *** Definisi TYPE TIME <HH:MM:SS> *** */
 typedef struct
 {
-    int HH; /* integer [0..23] */
-    int MM; /* integer [0..59] */
-    int SS; /* integer [0..59] */
+   int HH; /* integer [0..23] */
+   int MM; /* integer [0..59] */
+   int SS; /* integer [0..59] */
 } TIME;
 
 /* *** Notasi Akses: selektor TIME *** */
