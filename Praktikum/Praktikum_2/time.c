@@ -113,7 +113,7 @@ TIME PrevDetik(TIME T)
 TIME PrevNDetik(TIME T, int N)
 {
     int detik = TIMEToDetik(T);
-    if (detik - N < 0)
+    while (detik - N < 0)
     {
         detik += 86400;
     }
