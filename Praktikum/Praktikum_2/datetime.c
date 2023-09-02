@@ -52,10 +52,96 @@ void TulisDATETIME(DATETIME D)
     TulisTIME(D.T);
 }
 
-boolean DEQ(DATETIME D1, DATETIME D2) {}
-boolean DNEQ(DATETIME D1, DATETIME D2) {}
-boolean DLT(DATETIME D1, DATETIME D2) {}
-boolean DGT(DATETIME D1, DATETIME D2) {}
-DATETIME DATETIMENextNDetik(DATETIME D, int N) {}
-DATETIME DATETIMEPrevNDetik(DATETIME D, int N) {}
-long int DATETIMEDurasi(DATETIME DAw, DATETIME DAkh) {}
+boolean DEQ(DATETIME D1, DATETIME D2)
+{
+    return (D1.DD == D2.DD && D1.MM == D2.MM && D1.YYYY == D2.YYYY && TEQ(D1.T, D2.T));
+}
+
+boolean DNEQ(DATETIME D1, DATETIME D2)
+{
+    return !DEQ(D1, D2);
+}
+
+boolean DLT(DATETIME D1, DATETIME D2)
+{
+    return (D1.YYYY < D2.YYYY || (D1.YYYY == D2.YYYY && D1.MM < D2.MM) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD < D2.DD) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD == D2.DD && TLT(D1.T, D2.T)));
+}
+
+boolean DGT(DATETIME D1, DATETIME D2)
+{
+    return (DLT(D2, D1));
+}
+
+DATETIME DATETIMENextNDetik(DATETIME D, int N)
+{
+    DATETIME Dt;
+    TIME T;
+    int DD, MM, YYYY;
+    // 1 hari = 86400 detik
+    if (TIMEToDetik(D.T) + N > 86400)
+    {
+        while (TIMEToDetik(D.T) + N > 86400)
+        {
+            N -= 86400;
+            DD = D.DD + 1;
+            if (DD > GetMaxDay(D.MM, D.YYYY))
+            {
+                MM = D.MM + 1;
+                DD = 1;
+                if (MM > 12)
+                {
+                    YYYY = D.YYYY + 1;
+                    MM = 1;
+                }
+            }
+        }
+    }
+    else
+    {
+        DD = D.DD;
+        MM = D.MM;
+        YYYY = D.YYYY;
+    }
+    T = NextNDetik(D.T, N);
+    CreateDATETIME(&Dt, DD, MM, YYYY, T.HH, T.MM, T.SS);
+    return Dt;
+}
+
+DATETIME DATETIMEPrevNDetik(DATETIME D, int N)
+{
+    DATETIME Dt;
+    TIME T;
+    int DD, MM, YYYY;
+    // 1 hari = 86400 detik
+    if (TIMEToDetik(D.T) - N < 0)
+    {
+        while (TIMEToDetik(D.T) - N < 0)
+        {
+            N -= 86400;
+            DD = D.DD - 1;
+            if (DD < 0)
+            {
+                MM = D.MM - 1;
+                if (MM < 0)
+                {
+                    YYYY = D.YYYY - 1;
+                    MM = 12;
+                }
+            }
+        }
+    }
+    else
+    {
+        DD = D.DD;
+        MM = D.MM;
+        YYYY = D.YYYY;
+    }
+    T = PrevNDetik(D.T, N);
+    CreateDATETIME(&Dt, DD, MM, YYYY, T.HH, T.MM, T.SS);
+    return Dt;
+}
+
+long int DATETIMEDurasi(DATETIME DAw, DATETIME DAkh)
+{
+    return 0;
+}

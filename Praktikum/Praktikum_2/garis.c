@@ -64,16 +64,27 @@ boolean IsSejajar(GARIS L1, GARIS L2)
 
 float JarakGARIS(GARIS L, POINT P)
 {
-    return 0;
+    // Bentuklah persamaan dari garis L menjadi ax + by + c = 0
+    // y = ax + c
+    // c = y - ax
+    // ax + c - y = 0
+    // ax - y + b = 0
+    // y = -1
+    float a, b, c, d;
+    a = Gradien(L);
+    c = L.PAw.Y - (a * L.PAw.X);
+    b = -1;
+    // d = |a * x + b * y + c| / akar kuadrat dari a * a + b * b
+    d = fabs((a * P.X + b * P.Y + c) / sqrt(a * a + b * b));
+    return d;
 }
 
 boolean IsPointMemenuhiGaris(GARIS L, POINT P)
 {
-    float a, b, c, d;
+    float a, b, c;
     a = Gradien(L);
-    b = L.PAw.Y - (a * L.PAw.X);
-    // y = a1x + b1
-    // ax + by + c = 0
-    // a = a1, b = -1, c = b
-    return P.Y == (a * P.X) + b;
+    b = -1;
+    c = L.PAw.Y - (a * L.PAw.X);
+    // y = ax + b
+    return ((a * P.X) + (b * P.Y) + c == 0);
 }
