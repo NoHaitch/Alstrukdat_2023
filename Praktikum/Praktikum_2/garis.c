@@ -15,10 +15,15 @@ void CreateGaris(GARIS *L, POINT P1, POINT P2)
 
 void BacaGARIS(GARIS *L)
 {
-    POINT P1, P2;
-    BacaPOINT(&P1);
-    BacaPOINT(&P2);
-    CreateGaris(L, P1, P2);
+    BacaPOINT(&(*L).PAw);
+    BacaPOINT(&(*L).PAkh);
+    while (EQ((*L).PAw, (*L).PAkh))
+    {
+        printf("Garis tidak valid\n");
+        BacaPOINT(&(*L).PAw);
+        BacaPOINT(&(*L).PAkh);
+    }
+    CreateGaris(L, (*L).PAw, (*L).PAkh);
 }
 
 void TulisGARIS(GARIS L)
@@ -42,10 +47,8 @@ float Gradien(GARIS L)
 
 void GeserGARIS(GARIS *L, float deltaX, float deltaY)
 {
-    (*L).PAw.X += deltaX;
-    (*L).PAw.Y += deltaY;
-    (*L).PAkh.X += deltaX;
-    (*L).PAkh.Y += deltaY;
+    Geser(&PAwal(*L), deltaX, deltaY);
+    Geser(&PAkhir(*L), deltaX, deltaY);
 }
 
 boolean IsTegakLurus(GARIS L1, GARIS L2)
@@ -62,26 +65,15 @@ boolean IsSejajar(GARIS L1, GARIS L2)
 float JarakGARIS(GARIS L, POINT P)
 {
     return 0;
-} /*{
-     float m1, b, d;
-     m1 = Gradien(L);
-     b = L.PAw.Y - (m1 * L.PAw.X);
-
-     // Buat garis sejajar
-     // y = ax + b
-     // ax + b - y = 0
-     // ax - y + b = 0
-     // y = -1
-     // d = |a * x + b * y + c| / akar kuadrat dari a * a + b * b
-     d = sqrt(a * )
-     return()
- }*/
+}
 
 boolean IsPointMemenuhiGaris(GARIS L, POINT P)
 {
     float a, b, c, d;
     a = Gradien(L);
     b = L.PAw.Y - (a * L.PAw.X);
-    // y = ax + b
+    // y = a1x + b1
+    // ax + by + c = 0
+    // a = a1, b = -1, c = b
     return P.Y == (a * P.X) + b;
 }
