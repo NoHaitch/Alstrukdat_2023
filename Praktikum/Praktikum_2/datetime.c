@@ -40,10 +40,14 @@ void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int s
 
 void BacaDATETIME(DATETIME *D)
 {
-    int DD, MM, YYYY;
-    TIME T;
-    BacaTIME(&T);
-    CreateDATETIME(D, DD, MM, YYYY, T.HH, T.MM, T.SS);
+    int DD, MM, YYYY, h, m, s;
+    scanf("%d %d %d %d %d %d", &DD, &MM, &YYYY, &h, &m, &s);
+    while (!IsDATETIMEValid(DD, MM, YYYY, h, m, s))
+    {
+        printf("DATETIME tidak valid\n");
+        scanf("%d %d %d %d %d %d", &DD, &MM, &YYYY, &h, &m, &s);
+    }
+    CreateDATETIME(D, DD, MM, YYYY, h, m, s);
 }
 
 void TulisDATETIME(DATETIME D)
@@ -77,30 +81,27 @@ DATETIME DATETIMENextNDetik(DATETIME D, int N)
     DATETIME Dt;
     TIME T;
     int DD, MM, YYYY;
+    DD = D.DD;
+    MM = D.MM;
+    YYYY = D.YYYY;
     // 1 hari = 86400 detik
     if (TIMEToDetik(D.T) + N > 86400)
     {
         while (TIMEToDetik(D.T) + N > 86400)
         {
             N -= 86400;
-            DD = D.DD + 1;
+            DD += 1;
             if (DD > GetMaxDay(D.MM, D.YYYY))
             {
-                MM = D.MM + 1;
+                MM += +1;
                 DD = 1;
                 if (MM > 12)
                 {
-                    YYYY = D.YYYY + 1;
+                    YYYY += +1;
                     MM = 1;
                 }
             }
         }
-    }
-    else
-    {
-        DD = D.DD;
-        MM = D.MM;
-        YYYY = D.YYYY;
     }
     T = NextNDetik(D.T, N);
     CreateDATETIME(&Dt, DD, MM, YYYY, T.HH, T.MM, T.SS);
@@ -143,5 +144,35 @@ DATETIME DATETIMEPrevNDetik(DATETIME D, int N)
 
 long int DATETIMEDurasi(DATETIME DAw, DATETIME DAkh)
 {
-    return 0;
+    long int durasi;
+    // DNew adalah waktu yang akan perlahan menjadi sama dengan DAkh
+    DATETIME DNew;
+    Year(DNew) = Year(DAw);
+    Month(DNew) = Month(DAw);
+    Day(DNew) = Day(DAw);
+    Time(DNew) = Time(DAkh);
+
+    // dikarenakan ada prekondisi pada DURASI() dimana tidak boleh waktu sama
+    if (TEQ(Time(DAw), Time(DAkh)))
+    {
+        durasi = 0;
+    }
+    else
+    {
+        durasi = Durasi(Time(DAw), Time(DAkh));
+    }
+
+    // Jika waktu Awal > waktu Akhir cth : 15:0:0 > 12:0:0 maka berubah hari
+    if (TGT(Time(DAw), Time(DAkh)))
+    {
+        Day(DNew) += 1;
+    }
+
+    // Jika Hari belum sama maka tambah 1 hari ke durasi dan ke waktu Dnew hingga Dnew sama persis dengan Dakh
+    while (!DEQ(DNew, DAkh))
+    {
+        DNew = DATETIMENextNDetik(DNew, 24 * 60 * 60);
+        durasi += 24 * 60 * 60;
+    }
+    return durasi;
 }

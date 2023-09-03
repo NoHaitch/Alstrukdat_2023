@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "*.embeddedhtml": "html",
-    "point.h": "c"
+    "point.h": "c",
+    "datetime.h": "c"
   }
 }
