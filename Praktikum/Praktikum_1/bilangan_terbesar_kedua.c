@@ -1,3 +1,9 @@
+/*  Nama    : Raden Francisco Trianto Bratadiningrat
+    NIM     : 13522091
+    tanggal : 1 September 2023
+    Soal No : 5
+*/
+
 #include <stdio.h>
 // BRUTE FORCED way
 // find maximum1 using a loop,

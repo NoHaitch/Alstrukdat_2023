@@ -1,3 +1,9 @@
+/*  Nama : Raden Francisco Trianto Bratadiningrat
+    NIM : 13522091
+    tanggal : 1 September 2023
+    Soal No :
+*/
+
 #include <stdio.h>
 // BRUTE FORCED way
 // int limit is 2147483647 or 10 digits

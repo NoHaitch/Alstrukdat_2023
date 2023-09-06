@@ -1,3 +1,9 @@
+// File mtime.c
+// Raden Francicso Trianto Bratadiningrat
+// 13522091
+// Extended Praktikum 2 Algoritma dan Struktur Data
+// 3 September 2022
+
 #include <stdio.h>
 #include "time.h"
 
