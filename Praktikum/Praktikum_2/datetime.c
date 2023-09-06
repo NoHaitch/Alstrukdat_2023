@@ -8,24 +8,30 @@ int GetMaxDay(int M, int Y)
     {
         return 31;
     }
-    else if (M == 4 || M == 6 || M == 9 || M == 11)
-    {
-        return 30;
-    }
-    else if (Y % 400 == 0 || (Y % 100 != 0 && Y % 4 == 0))
-    {
-        // kabisat
-        return 29;
-    }
     else
     {
-        return 28;
+        if (M == 4 || M == 6 || M == 9 || M == 11)
+        {
+            return 30;
+        }
+        else
+        {
+            if (Y % 400 == 0 || (Y % 100 != 0 && Y % 4 == 0))
+            {
+                // kabisat
+                return 29;
+            }
+            else
+            {
+                return 28;
+            }
+        }
     }
 }
 
 boolean IsDATETIMEValid(int D, int M, int Y, int h, int m, int s)
 {
-    return (IsTIMEValid(h, m, s) && D >= 1 && D <= GetMaxDay(M, Y) && M >= 1 && M <= 12 && Y >= 1);
+    return (IsTIMEValid(h, m, s) && D >= 1 && D <= GetMaxDay(M, Y) && M >= 1 && M <= 12 && Y >= 1900 && Y <= 2030);
 }
 
 void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int ss)
@@ -54,6 +60,7 @@ void TulisDATETIME(DATETIME D)
 {
     printf("%d/%d/%d ", D.DD, D.MM, D.YYYY);
     TulisTIME(D.T);
+    printf("\n");
 }
 
 boolean DEQ(DATETIME D1, DATETIME D2)
@@ -68,6 +75,57 @@ boolean DNEQ(DATETIME D1, DATETIME D2)
 
 boolean DLT(DATETIME D1, DATETIME D2)
 {
+    if (D1.YYYY < D2.YYYY)
+    {
+        return true;
+    }
+    else
+    {
+        if (D1.YYYY > D2.YYYY)
+        {
+            return false;
+        }
+        else
+        {
+            if (D1.MM < D2.MM)
+            {
+                return true;
+            }
+            else
+            {
+                if (D1.MM > D2.MM)
+                {
+                    return false;
+                }
+                else
+                {
+                    if (D1.DD < D2.DD)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        if (D1.DD > D2.DD)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            if (TLT(D1.T, D2.T))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return (D1.YYYY < D2.YYYY || (D1.YYYY == D2.YYYY && D1.MM < D2.MM) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD < D2.DD) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD == D2.DD && TLT(D1.T, D2.T)));
 }
 
@@ -103,42 +161,35 @@ DATETIME DATETIMENextNDetik(DATETIME D, int N)
             }
         }
     }
-    T = NextNDetik(D.T, N);
-    CreateDATETIME(&Dt, DD, MM, YYYY, T.HH, T.MM, T.SS);
-    return Dt;
 }
 
 DATETIME DATETIMEPrevNDetik(DATETIME D, int N)
 {
     DATETIME Dt;
-    TIME T;
-    int DD, MM, YYYY;
+    Dt.DD = D.DD;
+    Dt.MM = D.MM;
+    Dt.YYYY = D.YYYY;
+    Dt.T = PrevNDetik(D.T, N);
     // 1 hari = 86400 detik
     if (TIMEToDetik(D.T) - N < 0)
     {
+        // diperlukan pergantian tanggal
         while (TIMEToDetik(D.T) - N < 0)
         {
             N -= 86400;
-            DD = D.DD - 1;
-            if (DD < 0)
+            Dt.DD -= 1;
+            if (Dt.DD < 1)
             {
-                MM = D.MM - 1;
-                if (MM < 0)
+                Dt.MM -= 1;
+                if (Dt.MM < 1)
                 {
-                    YYYY = D.YYYY - 1;
-                    MM = 12;
+                    Dt.YYYY -= 1;
+                    Dt.MM = 12;
                 }
+                Dt.DD = GetMaxDay(Dt.MM, Dt.YYYY);
             }
         }
     }
-    else
-    {
-        DD = D.DD;
-        MM = D.MM;
-        YYYY = D.YYYY;
-    }
-    T = PrevNDetik(D.T, N);
-    CreateDATETIME(&Dt, DD, MM, YYYY, T.HH, T.MM, T.SS);
     return Dt;
 }
 

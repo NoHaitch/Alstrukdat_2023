@@ -9,10 +9,12 @@ int main()
     DATETIME D1, D2;
     printf("DAY 1 : ");
     BacaDATETIME(&D1);
-    printf("DAY 2 : ");
-    BacaDATETIME(&D2);
+    int nextdetik = 12 * 31 * 24 * 3600;
+    TulisDATETIME(DATETIMENextNDetik(D1, nextdetik));
+    // printf("DAY 2 : ");
+    // BacaDATETIME(&D2);
 
-    printf("DURASI : %ld", DATETIMEDurasi(D1, D2));
+    // printf("DURASI : %ld", DATETIMEDurasi(D1, D2));
     return 0;
 }
 
