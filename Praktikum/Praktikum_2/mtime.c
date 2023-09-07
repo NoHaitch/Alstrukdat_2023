@@ -1,8 +1,8 @@
-// File mtime.c
-// Raden Francicso Trianto Bratadiningrat
-// 13522091
-// Extended Praktikum 2 Algoritma dan Struktur Data
-// 3 September 2022
+/*  Nama : Raden Francisco Trianto Bratadiningrat
+    NIM : 13522091
+    tanggal : 1 September 2023
+    Soal No :
+*/
 
 #include <stdio.h>
 #include "time.h"
