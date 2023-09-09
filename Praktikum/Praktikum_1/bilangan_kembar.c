@@ -1,6 +1,6 @@
 /*  Nama    : Raden Francisco Trianto Bratadiningrat
     NIM     : 13522091
-    tanggal : 1 September 2023
+    tanggal : 25 Agustus 2023
     Soal No : 4
 */
 
