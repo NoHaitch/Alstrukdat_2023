@@ -8,39 +8,85 @@
 #include "datetime.h"
 #include "time.h"
 
+/* ***************************************************************** */
+/* DEFINISI PRIMITIF                                                 */
+/* ***************************************************************** */
+/* KELOMPOK VALIDASI TERHADAP TYPE                                   */
+/* ***************************************************************** */
 int GetMaxDay(int M, int Y)
+/* Mengirimkan jumlah hari maksimum pada bulan M dan tahun Y */
+/* Prekondisi: 1 <= M <= 12*/
+/* Hint: Perhatikan Leap Year. Leap Year adalah tahun dengan 29 hari pada bulan Februari */
+/* Aturan Leap Year: */
+/* 1. Jika angka tahun itu habis dibagi 400, maka tahun itu sudah pasti tahun kabisat. 8*/
+/* 2. Jika angka tahun itu tidak habis dibagi 400 tetapi habis dibagi 100, maka tahun itu sudah pasti bukan merupakan tahun kabisat. */
+/* 3. Jika angka tahun itu tidak habis dibagi 400, tidak habis dibagi 100 akan tetapi habis dibagi 4, maka tahun itu merupakan tahun kabisat. */
+/* 4. Jika angka tahun tidak habis dibagi 400, tidak habis dibagi 100, dan tidak habis dibagi 4, maka tahun tersebut bukan merupakan tahun kabisat. */
 {
-    if (M == 1 || M == 3 || M == 5 || M == 7 || M == 8 || M == 10 || M == 12)
+    boolean kabisat;
+    if ((Y % 400 == 0))
+    {
+        kabisat = true;
+    }
+    else
+    {
+        if (Y % 100 == 0)
+        {
+            kabisat = false;
+        }
+        else if (Y % 4 == 0)
+        {
+            kabisat = true;
+        }
+        else
+        {
+            kabisat = false;
+        }
+    }
+
+    if (M == 2)
+    {
+        if (kabisat)
+        {
+            return 29;
+        }
+        else
+        {
+            return 28;
+        }
+    }
+    else if ((M % 2 == 1) && (M <= 7))
+    {
+        return 31;
+    }
+    else if ((M % 2 == 0) && (M <= 7))
+    {
+        return 30;
+    }
+    else if ((M % 2 == 1) && (M > 7))
+    {
+        return 30;
+    }
+    else if ((M % 2 == 0) && (M > 7))
     {
         return 31;
     }
     else
     {
-        if (M == 4 || M == 6 || M == 9 || M == 11)
-        {
-            return 30;
-        }
-        else
-        {
-            if (Y % 400 == 0 || (Y % 100 != 0 && Y % 4 == 0))
-            {
-                // kabisat
-                return 29;
-            }
-            else
-            {
-                return 28;
-            }
-        }
+        return 30;
     }
 }
-
 boolean IsDATETIMEValid(int D, int M, int Y, int h, int m, int s)
+/* Mengirim true jika D,M,Y,h,m,s dapat membentuk D yang valid */
+/* dipakai untuk mentest SEBELUM membentuk sebuah DATETIME */
 {
     return (IsTIMEValid(h, m, s) && D >= 1 && D <= GetMaxDay(M, Y) && M >= 1 && M <= 12 && Y >= 1900 && Y <= 2030);
 }
 
+/* *** Konstruktor: Membentuk sebuah DATETIME dari komponen-komponennya *** */
 void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int ss)
+/* Membentuk sebuah DATETIME dari komponen-komponennya yang valid */
+/* Prekondisi : DD, MM, YYYY, h, m, s valid untuk membentuk DATETIME */
 {
     (*D).DD = DD;
     (*D).MM = MM;
@@ -50,7 +96,23 @@ void CreateDATETIME(DATETIME *D, int DD, int MM, int YYYY, int hh, int mm, int s
     (*D).T = T;
 }
 
+/* ***************************************************************** */
+/* KELOMPOK BACA/TULIS                                               */
+/* ***************************************************************** */
 void BacaDATETIME(DATETIME *D)
+/* I.S. : D tidak terdefinisi */
+/* F.S. : D terdefinisi dan merupakan DATETIME yang valid */
+/* Proses : mengulangi membaca komponen DD, MM, YY, h, m, s sehingga membentuk D */
+/* yang valid. Tidak mungkin menghasilkan D yang tidak valid. */
+/* Pembacaan dilakukan dengan mengetikkan komponen DD, MM, YY, h, m, s
+   dalam satu baris, masing-masing dipisahkan 1 spasi, diakhiri enter. */
+/* Jika DATETIME tidak valid maka diberikan pesan: "DATETIME tidak valid", dan pembacaan
+    diulangi hingga didapatkan DATETIME yang valid. */
+/* Contoh:
+    32 13 2023 12 34 56
+    DATETIME tidak valid
+    31 12 2023 12 34 56
+    --> akan terbentuk DATETIME <31,12,2023,12,34,56> */
 {
     int DD, MM, YYYY, h, m, s;
     scanf("%d %d %d %d %d %d", &DD, &MM, &YYYY, &h, &m, &s);
@@ -63,173 +125,187 @@ void BacaDATETIME(DATETIME *D)
 }
 
 void TulisDATETIME(DATETIME D)
+/* I.S. : D sembarang */
+/* F.S. : Nilai D ditulis dg format DD/MM/YYYY HH:MM:SS */
+/* Proses : menulis nilai setiap komponen D ke layar dalam format DD/MM/YYYY HH:MM:SS
+   tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/
 {
-    printf("%d/%d/%d ", D.DD, D.MM, D.YYYY);
-    TulisTIME(D.T);
-    printf("\n");
+    printf("%d/%d/%d %d:%d:%d", Day(D), Month(D), Year(D), Hour(Time(D)), Minute(Time(D)), Second(Time(D)));
 }
 
+/* ***************************************************************** */
+/* KELOMPOK OPERASI TERHADAP TYPE                                    */
+/* ***************************************************************** */
+/* *** Kelompok operasi relasional terhadap DATETIME *** */
 boolean DEQ(DATETIME D1, DATETIME D2)
+/* Mengirimkan true jika D1=D2, false jika tidak */
 {
-    return (D1.DD == D2.DD && D1.MM == D2.MM && D1.YYYY == D2.YYYY && TEQ(D1.T, D2.T));
+    return (Day(D1) == Day(D2) && Month(D1) == Month(D2) && Year(D1) == Year(D2) && TEQ(Time(D1), Time(D2)));
 }
 
 boolean DNEQ(DATETIME D1, DATETIME D2)
+/* Mengirimkan true jika D1 tidak sama dengan D2 */
 {
     return !DEQ(D1, D2);
 }
 
 boolean DLT(DATETIME D1, DATETIME D2)
+/* Mengirimkan true jika D1<D2, false jika tidak */
 {
-    if (D1.YYYY < D2.YYYY)
+    if (Year(D1) < Year(D2))
     {
         return true;
     }
-    else
+    else if (Year(D1) == Year(D2))
     {
-        if (D1.YYYY > D2.YYYY)
+        if (Month(D1) < Month(D2))
         {
-            return false;
+            return true;
         }
-        else
+        else if (Month(D1) == Month(D2))
         {
-            if (D1.MM < D2.MM)
+            if (Day(D1) < Day(D2))
             {
                 return true;
             }
-            else
+            else if (Day(D1) == Day(D2))
             {
-                if (D1.MM > D2.MM)
+                if (TLT(Time(D1), Time(D2)))
                 {
-                    return false;
+                    return true;
                 }
                 else
                 {
-                    if (D1.DD < D2.DD)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        if (D1.DD > D2.DD)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            if (TLT(D1.T, D2.T))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                    }
+                    return false;
                 }
             }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
-
-    return (D1.YYYY < D2.YYYY || (D1.YYYY == D2.YYYY && D1.MM < D2.MM) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD < D2.DD) || (D1.YYYY == D2.YYYY && D1.MM == D2.MM && D1.DD == D2.DD && TLT(D1.T, D2.T)));
+    else
+    {
+        return false;
+    }
 }
 
 boolean DGT(DATETIME D1, DATETIME D2)
+/* Mengirimkan true jika D1>D2, false jika tidak */
 {
     return (DLT(D2, D1));
 }
 
 DATETIME DATETIMENextNDetik(DATETIME D, int N)
+/* Mengirim salinan D dengan detik ditambah N */
 {
-    DATETIME Dt;
-    TIME T;
-    int DD, MM, YYYY;
-    DD = D.DD;
-    MM = D.MM;
-    YYYY = D.YYYY;
-    // 1 hari = 86400 detik
-    if (TIMEToDetik(D.T) + N > 86400)
+    DATETIME D1;
+    Second(Time(D)) += N;
+
+    while (Second(Time(D)) > 59)
     {
-        while (TIMEToDetik(D.T) + N > 86400)
-        {
-            N -= 86400;
-            DD += 1;
-            if (DD > GetMaxDay(D.MM, D.YYYY))
-            {
-                MM += +1;
-                DD = 1;
-                if (MM > 12)
-                {
-                    YYYY += +1;
-                    MM = 1;
-                }
-            }
-        }
+        Second(Time(D)) -= 60;
+        Minute(Time(D))++;
     }
+
+    while (Minute(Time(D)) > 59)
+    {
+        Minute(Time(D)) -= 60;
+        Hour(Time(D))++;
+    }
+
+    while (Hour(Time(D)) > 23)
+    {
+        Hour(Time(D)) -= 24;
+        Day(D)++;
+    }
+
+    while (Day(D) > GetMaxDay(Month(D), Year(D)))
+    {
+        Day(D) -= GetMaxDay(Month(D), Year(D));
+        Month(D)++;
+    }
+
+    while (Month(D) > 12)
+    {
+        Month(D) -= 12;
+        Year(D)++;
+    }
+
+    CreateDATETIME(&D1, Day(D), Month(D), Year(D), Hour(Time(D)), Minute(Time(D)), Second(Time(D)));
+    return D1;
 }
 
 DATETIME DATETIMEPrevNDetik(DATETIME D, int N)
+/* Mengirim salinan D dengan detik dikurang N */
 {
-    DATETIME Dt;
-    Dt.DD = D.DD;
-    Dt.MM = D.MM;
-    Dt.YYYY = D.YYYY;
-    Dt.T = PrevNDetik(D.T, N);
-    // 1 hari = 86400 detik
-    if (TIMEToDetik(D.T) - N < 0)
+    DATETIME D1;
+    Second(Time(D)) -= N;
+
+    while (Second(Time(D)) < 0)
     {
-        // diperlukan pergantian tanggal
-        while (TIMEToDetik(D.T) - N < 0)
-        {
-            N -= 86400;
-            Dt.DD -= 1;
-            if (Dt.DD < 1)
-            {
-                Dt.MM -= 1;
-                if (Dt.MM < 1)
-                {
-                    Dt.YYYY -= 1;
-                    Dt.MM = 12;
-                }
-                Dt.DD = GetMaxDay(Dt.MM, Dt.YYYY);
-            }
-        }
+        Second(Time(D)) += 60;
+        Minute(Time(D))--;
     }
-    return Dt;
+
+    while (Minute(Time(D)) < 0)
+    {
+        Minute(Time(D)) += 60;
+        Hour(Time(D))--;
+    }
+
+    while (Hour(Time(D)) < 0)
+    {
+        Hour(Time(D)) += 24;
+        Day(D)--;
+    }
+
+    while (Day(D) < 1)
+    {
+        Month(D)--;
+        Day(D) += GetMaxDay(Month(D), Year(D));
+    }
+
+    while (Month(D) < 1)
+    {
+        Month(D) += 12;
+        Year(D)--;
+    }
+
+    CreateDATETIME(&D1, Day(D), Month(D), Year(D), Hour(Time(D)), Minute(Time(D)), Second(Time(D)));
+    return D1;
 }
 
+/* *** Kelompok Operator Aritmetika terhadap DATETIME *** */
 long int DATETIMEDurasi(DATETIME DAw, DATETIME DAkh)
+/* Mengirim DAkh-DAw dlm Detik, dengan kalkulasi */
+/* Prekondisi: DAkh > DAw */
 {
-    long int durasi;
-    // DNew adalah waktu yang akan perlahan menjadi sama dengan DAkh
-    DATETIME DNew;
-    Year(DNew) = Year(DAw);
-    Month(DNew) = Month(DAw);
-    Day(DNew) = Day(DAw);
-    Time(DNew) = Time(DAkh);
+    long int hasil;
+    DATETIME D;
+    Year(D) = Year(DAw);
+    Month(D) = Month(DAw);
+    Day(D) = Day(DAw);
+    int countDays = 0;
 
-    // dikarenakan ada prekondisi pada DURASI() dimana tidak boleh waktu sama
-    if (TEQ(Time(DAw), Time(DAkh)))
-    {
-        durasi = 0;
-    }
-    else
-    {
-        durasi = Durasi(Time(DAw), Time(DAkh));
-    }
+    hasil = Durasi(Time(DAw), Time(DAkh));
 
-    // Jika waktu Awal > waktu Akhir cth : 15:0:0 > 12:0:0 maka berubah hari
+    Time(D) = Time(DAkh);
+
     if (TGT(Time(DAw), Time(DAkh)))
     {
-        Day(DNew) += 1;
+        Day(D)++;
     }
 
-    // Jika Hari belum sama maka tambah 1 hari ke durasi dan ke waktu Dnew hingga Dnew sama persis dengan Dakh
-    while (!DEQ(DNew, DAkh))
+    while (DNEQ(D, DAkh))
     {
-        DNew = DATETIMENextNDetik(DNew, 24 * 60 * 60);
-        durasi += 24 * 60 * 60;
+        D = DATETIMENextNDetik(D, 24 * 60 * 60);
+        countDays++;
     }
-    return durasi;
+    return hasil + countDays * 86400;
 }

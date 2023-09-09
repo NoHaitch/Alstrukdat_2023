@@ -5,50 +5,48 @@
 */
 
 #include <stdio.h>
-#include <math.h>
 #include "point.h"
-#include "point.c"
 
 int main()
 {
     POINT P1, P2, P3;
-    int a, b, c;
+    float a, b, c, d, e, f, g, h, i, j, k, l;
     BacaPOINT(&P1);
     BacaPOINT(&P2);
     BacaPOINT(&P3);
-    TulisPOINT(P1);
-    TulisPOINT(P2);
-    TulisPOINT(P3);
-    printf("\n");
-    // (x1,y1) (x2,y2) (x3,y3)
-    // y = ax^2 + bx + c
-    // y1 = a(x1)^2 + b(x1) + c
-    // y2 = a(x2)^2 + b(x2) + c
-    // y3 = a(x3)^2 + b(x3) + c
-    // ======================== +
-    // y1 + y2 + y3 = a(x1^2 + x2^2 + x3^2) + b(x1 + x2 + x3) + 3c
-    // a(x1^2 + x2^2 + x3^2) + b(x1 + x2 + x3) + 3c - (y1 + y2 + y3) = 0
-    // saat x = 0, 3c - (y1+y2+y3) = 0
-    //             3c = y1+y2+y3
-    // c = (Ordinat(P1) + Ordinat(P2) + Ordinat(P3)) / 3;
-    // printf("c = %d\n", c);
 
-    // y1 - y2 = a(x1)^2 - a(x2)^2 + b(x1) + b(x2)
-    // b(x1+x2) = (y1-y2) - a(x1^2 - x2^2)
-    // printf("b * (%d) = (%d) - a *(%d)\n", (Absis(P1) + Absis(P2)), (Ordinat(P1) - Ordinat(P2)), (Absis(P1) * Absis(P1) - Absis(P2) * Absis(P2)));
-    // printf("%f", Ordinat(P1));
-    // TulisPOINT(P1);
-    // C sudah ditemukan
-    // y1 = a(x1)^2 + b(x1) + c
-    // y2 = a(x2)^2 + b(x2) + c
-    // y2-y1 = a(x2^2-x1^2) + b(x2^2-x1^2)
-    // PERLU MENCARI NILAI a
+    a = Absis(P1) * Absis(P1);
+    b = Absis(P1);
+    c = 1;
+    d = Ordinat(P1);
 
-    /*  y = c + bx + ax**2
-        a = pin, b, c = bil. acak
+    e = Absis(P2) * Absis(P2);
+    f = Absis(P2);
+    g = 1;
+    h = Ordinat(P2);
+
+    i = Absis(P3) * Absis(P3);
+    j = Absis(P3);
+    k = 1;
+    l = Ordinat(P3);
+
+    /* Gunakan aturan Cramer */
+    /*
+        | a1 b1 c1 | a1 b1
+        | a2 b2 c2 | a2 b2
+        | a3 b3 c3 | a3 b3
     */
-
-    a = ((P1.Y - P2.Y) * (P2.X - P3.X) - (P2.Y - P3.Y) * (P1.X - P2.X)) / ((P1.X - P2.X) * (P2.X - P3.X) * (P3.X - P1.X));
-    printf("a = %d", a);
-    return 0;
+    float delta, da, db, dc;
+    int ra, rb, rc;
+    /*mencari determinan delta, da, db, dc*/
+    delta = (a * f * k) + (b * g * i) + (c * e * j) - (c * f * i) - (a * g * j) - (b * e * k);
+    da = (d * f * k) + (b * g * l) + (c * h * j) - (c * f * l) - (d * g * j) - (b * h * k);
+    db = (a * h * k) + (d * g * i) + (c * e * l) - (c * h * i) - (a * g * l) - (d * e * k);
+    dc = (a * f * l) + (b * h * i) + (d * e * j) - (d * f * i) - (a * h * j) - (b * e * l);
+    ra = da / delta;
+    rb = db / delta;
+    rc = dc / delta;
+    // maka fungsi kuadratiknya adalah y = ra x^2 + rb x + rc
+    // dengan rc adalah pin rahasia
+    printf("%d\n", rc);
 }
