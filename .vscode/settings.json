@@ -3,6 +3,7 @@
     "*.embeddedhtml": "html",
     "point.h": "c",
     "datetime.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "math.h": "c"
   }
 }
