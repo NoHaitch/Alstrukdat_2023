@@ -13,28 +13,55 @@ int main()
     int i;
     readList(&l1);
     readList(&l2);
-    printList(l1);
-    printf("\n");
-    printList(l2);
-    printf("\n");
-    if (listLength(l1) == listLength(l2))
+    if (listLength(l1) >= listLength(l2))
     {
-        l1 = plusMinusList(l1, l2, true);
-    }
-    else if (listLength(l1) > listLength(l2))
-    {
-        for (i = listLength(l2); i >= 0; i--)
+        int distance = listLength(l1) - listLength(l2);
+        for (i = listLength(l2) - 1; i >= 0; i--)
         {
-            ELMT(l1, listLength(l1) - i) += ELMT(l2, i);
+            ELMT(l1, i + distance) += ELMT(l2, i);
         }
         l3 = l1;
     }
     else
     {
-        for (i = listLength(l1); i >= 0; i--)
+        int distance = listLength(l2) - listLength(l1);
+        for (i = listLength(l1) - 1; i >= 0; i--)
         {
-            ELMT(l2, listLength(l2) - i) += ELMT(l1, i);
+            ELMT(l2, i + distance) += ELMT(l1, i);
         }
         l3 = l2;
     }
+    int x = 1;
+    while (x == 1)
+    {
+        int cek_count = 0;
+        for (i = 0; i < listLength(l3); i++)
+        {
+            if (ELMT(l3, i) <= 9)
+            {
+                cek_count += 1;
+            }
+        }
+        if (cek_count == listLength(l3))
+        {
+            x = 2;
+            break;
+        }
+        for (i = 0; i < listLength(l3); i++)
+        {
+            if (ELMT(l3, i) > 9 && i != 0)
+            {
+                ELMT(l3, i) -= 10;
+                ELMT(l3, i - 1) += 1;
+            }
+        }
+        if (ELMT(l3, 0) > 9)
+        {
+            insertFirst(&l3, ELMT(l3, 0) / 10);
+            ELMT(l3, 1) %= 10;
+        }
+    }
+    printList(l3);
+    printf("\n");
+    return 0;
 }
