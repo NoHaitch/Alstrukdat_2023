@@ -5,7 +5,7 @@
 */
 
 #include <stdio.h>
-#include "point.c"
+#include "point.h"
 
 int main()
 {
