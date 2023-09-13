@@ -1,3 +1,9 @@
+/*  Nama    : Raden Francisco Trianto Bratadiningrat
+    NIM     : 13522091
+    tanggal : 8 September 2023
+    Soal No : Pra - 1
+*/
+
 #include <stdio.h>
 #include "boolean.h"
 #include "liststatik.h"
