@@ -5,6 +5,7 @@
     "datetime.h": "c",
     "stdio.h": "c",
     "math.h": "c",
-    "liststatik.h": "c"
+    "liststatik.h": "c",
+    "matrix.h": "c"
   }
 }

@@ -20,9 +20,9 @@ typedef int ElType; /* type elemen list */
 typedef int IdxType;
 typedef struct
 {
-    ElType *buffer; /* memori tempat penyimpan elemen (container) */
-    int nEff;       /* >=0, banyaknya elemen efektif */
-    int capacity;   /* ukuran elemen */
+   ElType *buffer; /* memori tempat penyimpan elemen (container) */
+   int nEff;       /* >=0, banyaknya elemen efektif */
+   int capacity;   /* ukuran elemen */
 } ListDin;
 /* Indeks yang digunakan [0..capacity-1] */
 /* Jika l adalah : ListDin, cara deklarasi dan akses: */

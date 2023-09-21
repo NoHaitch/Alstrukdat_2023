@@ -4,6 +4,10 @@
     Soal No : 2
 */
 
+#include <stdio.h>
+#include "listdin.h"
+#include "math.h"
+
 int main()
 {
     ListDin A;
