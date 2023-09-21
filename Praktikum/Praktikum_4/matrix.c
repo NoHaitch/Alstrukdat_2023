@@ -10,14 +10,6 @@ void createMatrix(int nRows, int nCols, Matrix *m)
 {
    ROW_EFF(*m) = nRows;
    COL_EFF(*m) = nCols;
-   int i, j;
-   for (i = 0; i < nRows; i++)
-   {
-      for (j = 0; j < nCols; j++)
-      {
-         ELMT(*m, i, j) = 0;
-      }
-   }
 }
 
 /* *** Selektor "Dunia Matrix" *** */
@@ -123,30 +115,34 @@ Matrix addMatrix(Matrix m1, Matrix m2)
 /* Prekondisi : m1 berukuran sama dengan m2 */
 /* Mengirim hasil penjumlahan matriks: m1 + m2 */
 {
+   Matrix m;
+   createMatrix(ROW_EFF(m1), COL_EFF(m2), &m);
    int i, j;
-   for (i = 0; i < ROW_EFF(m1); i++)
+   for (i = 0; i < ROW_EFF(m); i++)
    {
-      for (j = 0; i < COL_EFF(m1); j++)
+      for (j = 0; j < COL_EFF(m); j++)
       {
-         ELMT(m1, i, j) += ELMT(m2, i, j);
+         ELMT(m, i, j) = ELMT(m1, i, j) + ELMT(m2, i, j);
       }
    }
-   return m1;
+   return m;
 }
 
 Matrix subtractMatrix(Matrix m1, Matrix m2)
 /* Prekondisi : m1 berukuran sama dengan m2 */
 /* Mengirim hasil pengurangan matriks: salinan m1 – m2 */
 {
+   Matrix m;
+   createMatrix(ROW_EFF(m1), COL_EFF(m2), &m);
    int i, j;
-   for (i = 0; i < ROW_EFF(m1); i++)
+   for (i = 0; i < ROW_EFF(m); i++)
    {
-      for (j = 0; i < COL_EFF(m1); j++)
+      for (j = 0; j < COL_EFF(m); j++)
       {
-         ELMT(m1, i, j) -= ELMT(m2, i, j);
+         ELMT(m, i, j) = ELMT(m1, i, j) - ELMT(m2, i, j);
       }
    }
-   return m1;
+   return m;
 }
 
 Matrix multiplyMatrix(Matrix m1, Matrix m2)
@@ -154,12 +150,13 @@ Matrix multiplyMatrix(Matrix m1, Matrix m2)
 /* Mengirim hasil perkalian matriks: salinan m1 * m2 */
 {
    Matrix m;
-   createMatrix(ROW_EFF(m1), COL_EFF(m2), &m);
+   createMatrix(ROW_EFF(m1), COL_EFF(m1), &m);
    int i, j, k;
    for (i = 0; i < ROW_EFF(m1); i++)
    {
-      for (j = 0; j < COL_EFF(m2); j++)
+      for (j = 0; j < COL_EFF(m1); j++)
       {
+         ELMT(m, i, j) = 0;
          for (k = 0; k < COL_EFF(m1); k++)
          {
             ELMT(m, i, j) += ELMT(m1, i, k) * ELMT(m2, k, j);
@@ -181,7 +178,7 @@ Matrix multiplyMatrixWithMod(Matrix m1, Matrix m2, int mod)
    {
       for (j = 0; j < COL_EFF(m1); j++)
       {
-         ELMT(m, i, j) %= mod;
+         ELMT(m, i, j) = ELMT(m, i, j) % mod;
       }
    }
    return m;
@@ -352,7 +349,7 @@ Matrix negation(Matrix m)
    {
       for (j = 0; j < COL_EFF(m); j++)
       {
-         ELMT(mOut, i, j) = -ELMT(m, i, j);
+         ELMT(mOut, i, j) = ELMT(m, i, j) * (-1);
       }
    }
    return mOut;
@@ -367,7 +364,7 @@ void pNegation(Matrix *m)
    {
       for (j = 0; j < COL_EFF(*m); j++)
       {
-         ELMT(*m, i, j) = -ELMT(*m, i, j);
+         ELMT(*m, i, j) = ELMT(*m, i, j) * (-1);
       }
    }
 }
@@ -376,7 +373,7 @@ float determinant(Matrix m)
 /* Prekondisi: isSquare(m) */
 /* Menghitung nilai determinan m */
 {
-   if (ROW_EFF(m) == 0)
+   /*if (ROW_EFF(m) == 0)
    {
       return 0;
    }
@@ -424,7 +421,57 @@ float determinant(Matrix m)
             // result = result + determinant(newm);
          }
       }
+   }*/
+   if (!isSquare(m))
+   {
+      return 0;
    }
+   int n = getLastIdxRow(m) + 1;
+   int tmpRow[11];
+   int i, j, k, idx, temp1, temp2;
+   int det = 1;
+   int co = 1;
+   for (i = 0; i < n; i++)
+   {
+      idx = i;
+      while (ELMT(m, idx, i) == 0 && idx < n)
+      {
+         idx++;
+      }
+      if (idx == n)
+      {
+         return 0;
+      }
+      if (i != idx)
+      {
+         for (j = 0; j < n; j++)
+         {
+            temp1 = ELMT(m, i, j);
+            ELMT(m, i, j) = ELMT(m, idx, j);
+            ELMT(m, idx, j) = temp1;
+         }
+         det *= -1;
+      }
+      for (j = 0; j < n; j++)
+      {
+         tmpRow[j] = ELMT(m, i, j);
+      }
+      for (j = i + 1; j < n; j++)
+      {
+         temp1 = tmpRow[i];
+         temp2 = ELMT(m, j, i);
+         for (k = 0; k < n; k++)
+         {
+            ELMT(m, j, k) = ((temp1 * ELMT(m, j, k)) - (temp2 * tmpRow[k]));
+         }
+         co *= temp1;
+      }
+   }
+   for (i = 0; i < n; i++)
+   {
+      det *= ELMT(m, i, i);
+   }
+   return det / co;
 }
 
 Matrix transpose(Matrix m)
@@ -460,7 +507,7 @@ void pTranspose(Matrix *m)
    }
 }
 
-int main()
+/*int main()
 {
    Matrix m;
    int row, col;
@@ -471,4 +518,4 @@ int main()
    printf("%f\n", determinant(m));
    printf("finished\n");
    return 0;
-}
+}*/
