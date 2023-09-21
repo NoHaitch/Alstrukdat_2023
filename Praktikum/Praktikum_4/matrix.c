@@ -150,11 +150,11 @@ Matrix multiplyMatrix(Matrix m1, Matrix m2)
 /* Mengirim hasil perkalian matriks: salinan m1 * m2 */
 {
    Matrix m;
-   createMatrix(ROW_EFF(m1), COL_EFF(m1), &m);
+   createMatrix(ROW_EFF(m1), COL_EFF(m2), &m);
    int i, j, k;
    for (i = 0; i < ROW_EFF(m1); i++)
    {
-      for (j = 0; j < COL_EFF(m1); j++)
+      for (j = 0; j < COL_EFF(m2); j++)
       {
          ELMT(m, i, j) = 0;
          for (k = 0; k < COL_EFF(m1); k++)
@@ -209,7 +209,7 @@ void pMultiplyByConst(Matrix *m, ElType k)
    {
       for (j = 0; j < COL_EFF(*m); j++)
       {
-         ELMT(*m, i, j) *= k;
+         ELMT(*m, i, j) = ELMT(*m, i, j) * k;
       }
    }
 }
