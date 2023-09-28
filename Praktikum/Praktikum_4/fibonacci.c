@@ -5,16 +5,16 @@
 */
 
 #include <stdio.h>
-#include "matrix.c"
+#include "matrix.h"
 #include "boolean.h"
 
 Matrix PangkatMatrix (Matrix m, int pangkat){
     Matrix identitas;
     createMatrix(2,2,&identitas);
     ELMT(identitas,0,0) = 1;
-    ELMT(identitas,0,1) = 1;
-    ELMT(identitas,1,0) = 1;
-    ELMT(identitas,1,1) = 0;
+    ELMT(identitas,0,1) = 0;
+    ELMT(identitas,1,0) = 0;
+    ELMT(identitas,1,1) = 1;
     if(pangkat == 0){
         return identitas;
     }    
@@ -22,9 +22,9 @@ Matrix PangkatMatrix (Matrix m, int pangkat){
         return m;
     } else{
         Matrix m2 = PangkatMatrix(m,pangkat/2);
-        Matrix mulMatrix = multiplyMatrix(m2,m2);
+        Matrix mulMatrix = multiplyMatrixWithMod(m2,m2,2003);
         if(pangkat % 2 == 1){
-            mulMatrix = multiplyMatrix(mulMatrix,m);
+            mulMatrix = multiplyMatrixWithMod(mulMatrix,m,2003);
         }
         return mulMatrix;
     }
@@ -33,17 +33,27 @@ Matrix PangkatMatrix (Matrix m, int pangkat){
 int main(){
     int k;
     scanf("%d",&k);
-    if(k == 1 || k == 2){
+    if(k <= 0){
+        printf("0\n");
+    }
+    else if(k == 1 || k == 2){
         printf("1\n");
-    }else{
+    }
+    else{
+        Matrix rasio;
+        createMatrix(2,2,&rasio); 
+        ELMT(rasio,0,0) = 1;
+        ELMT(rasio,0,1) = 1;
+        ELMT(rasio,1,0) = 1;
+        ELMT(rasio,1,1) = 0;
+        rasio = PangkatMatrix(rasio,k-2);
+
         Matrix base;
         createMatrix(2,1,&base);
         ELMT(base,0,0) = 1;
         ELMT(base,1,0) = 1;
-        Matrix new;
-        createMatrix(2,1,&new); 
-        new = PangkatMatrix(base,k-2);
-        multiplyMatrixWithMod(new,base,2003);
-        printf("%d\n",ELMT(new,0,0));
+        
+        Matrix result = multiplyMatrixWithMod(rasio,base,2003);
+        printf("%d\n",ELMT(result,0,0));
     }
 }

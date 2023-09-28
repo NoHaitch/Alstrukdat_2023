@@ -5,42 +5,47 @@
 */
 
 #include <stdio.h>
-#include "matrix.h"
 #include "boolean.h"
 
-int main(){
-    int x, y, k;
-    scanf("%d %d",&x, &y);
-    scanf("%d",&k);
-    if(x == 0 || y== 0){
-        printf(0);
-    }else{
-        Matrix m;
-        readMatrix(&m,x,y);
-        int i,j,p,q,w,z;
-        int max = 0;
-        int row, col;
-        for(row=1;row<k+1;row++){
-            for(col=1;col<k+1;col++){
-                if(row*col == k){
-                    for(p=0; p<ROW_EFF(m);p++){
-                        for(q=0; q<COL_EFF(m);q++){
-                            if(row <= ROW_EFF(m)-p+1 && col <= COL_EFF(m)-q+1){
-                                int sum = 0;
-                                for(i = p; i<row+p; i++){
-                                    for(j=q; j<col+q; j++){
-                                        sum += ELMT(m,i,j);
-                                    }   
-                                }
-                                if(sum > max){
-                                    max = sum;
-                                }
-                            }
+int main() {
+    int N, M, K;
+    scanf("%d %d %d", &N, &M, &K);
+
+    int matrix[N][M];
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    int maxSum = 0;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            for (int p = i; p < N; p++) {
+                for (int q = j; q < M; q++) {
+                    int currentSum = 0;
+
+                    // Hitung total elemen pada segi empat
+                    for (int x = i; x <= p; x++) {
+                        for (int y = j; y <= q; y++) {
+                            currentSum += matrix[x][y];
                         }
+                    }
+
+                    // Periksa apakah luas segi empat sama dengan K dan lebih besar dari maxSum
+                    if ((p - i + 1) * (q - j + 1) == K && currentSum > maxSum) {
+                        maxSum = currentSum;
                     }
                 }
             }
         }
-        printf("%d\n",max);
     }
+
+    printf("%d\n", maxSum);
+
+    return 0;
 }
+
+
+
