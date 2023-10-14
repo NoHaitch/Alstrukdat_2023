@@ -1,3 +1,9 @@
+/*  Nama : Raden Francisco Trianto Bratadiningrat
+    NIM : 13522091
+    tanggal : 29 September 2023
+    Soal No : 1
+*/
+
 #include <stdio.h>
 #include "charmachine.h"
 #include "wordmachine.h"

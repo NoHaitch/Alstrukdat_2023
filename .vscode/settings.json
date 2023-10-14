@@ -7,6 +7,7 @@
     "math.h": "c",
     "liststatik.h": "c",
     "matrix.h": "c",
-    "charmachine.h": "c"
+    "charmachine.h": "c",
+    "wordmachine.h": "c"
   }
 }

@@ -1,6 +1,6 @@
 /*  Nama : Raden Francisco Trianto Bratadiningrat
     NIM : 13522091
-    tanggal : 22 September 2023
+    tanggal : 29 September 2023
     Soal No : Pra - 1
 */
 
@@ -43,7 +43,7 @@ void ADVWORD()
           currentChar adalah karakter pertama dari kata berikutnya, mungkin MARK
           Jika currentChar = MARK, EndWord = true.
    Proses : Akuisisi kata menggunakan procedure SalinWord */
-{
+{  
    IgnoreBlanks();
    if (currentChar == MARK){
       EndWord = true;
