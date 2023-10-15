@@ -53,45 +53,79 @@ int main(){
             }  
         }
     }
-
     // Sort berdasarkan karakter
     int currentIdx = 0;
-    for(i = 1; i < maxWordLength+1; i++){
-        //cek jumlah kata dengan maxWordLength
-        printf("maxlength : %d\n",i);
-        int countWord = 0;
-        int j = currentIdx;
-        while(words[j].Length == i){
-            countWord ++;
-            j++;
+    for(int len = words[0].Length; len < maxWordLength+1; len++){
+        int idxStart = currentIdx;
+        while(words[currentIdx].Length == len && currentIdx < wordCount){
+            currentIdx ++;
         }
-        if(countWord != 1){
-            for(k = currentIdx; k<j-1; k++){
-                int x = 0;
+        int idxEnd = currentIdx-1;
+        if(idxEnd < idxStart){
+            idxEnd = idxStart;
+        }
+        boolean sortString = false;
+        printf("len: %d ====================\n",len);
+        while(!sortString){
+            printf("-------------\n");
+            int countCorrect = 0;
+            for(i = idxStart; i < idxEnd+1; i ++){
+                for(j=0; j<wordCount ; j++){
+                    printWord(words[j]);
+                    printf("-");
+                } printf("\n");
+                j = 0;
                 boolean checked = false;
-                while(!checked && x < i){
-                    printf("> %c vs %c\n",words[k].TabWord[x],words[k+1].TabWord[x]);
-                    if(words[k].TabWord[x] == words[k+1].TabWord[x]){
-                        x++;
-                    }
-                    else if((int) words[k].TabWord[x] > (int) words[k+1].TabWord[x]){
-                        Word temp = words[k];
-                        words[k] = words[k+1];
-                        words[k+1] = temp;
+                while(!checked && j < len-1){
+                    printf("idx : %d , %d %c vs %d %c\n",i,(int)words[i].TabWord[j],words[i].TabWord[j],(int)words[i+1].TabWord[j],words[i+1].TabWord[j]);
+                    if((int)words[i].TabWord[j] < (int)words[i+1].TabWord[j]){
+                        countCorrect ++;
                         checked = true;
-                    }
-                    else{
+                    } else if((int)words[i].TabWord[j] > (int)words[i+1].TabWord[j]){
                         checked = true;
+                    }  else if(j == len-1){
+                        countCorrect ++; 
+                        checked = true;
+                    } else{
+                        j++;
                     }
+                    printf("-> %d\n",countCorrect);
                 }
             }
+            printf("%d != %d  start: %d  end: %d\n",countCorrect,idxEnd-idxStart,idxStart,idxEnd);
+            if(countCorrect != idxEnd-idxStart && idxStart != idxEnd){
+                for(i = idxStart; i < idxEnd; i ++){
+                    j = 0;
+                    boolean checked = false;
+                    while(!checked && j < len){
+                        if((int)words[i].TabWord[j] > (int)words[i+1].TabWord[j]){
+                            Word temp = words[i];
+                            words[i] = words[i+1];
+                            words[i+1] = temp;
+                            checked = true;
+                            printWord(words[i+1]);
+                            printf("==swapped==");
+                            printf("/n");
+                            printWord(words[i]);
+                        } else if(j == len-1 || (int)words[i].TabWord[j] < (int)words[i+1].TabWord[j]){
+                            checked = true;
+                        } else if((int)words[i].TabWord[j] == (int)words[i+1].TabWord[j]){
+                            j++;
+                        }
+                    }
+                }
+            } else{
+                sortString = true;
+            }
         }
-        currentIdx == j;
     }
-    printf("\n====\n");
     for(i=0; i<wordCount ; i++){
         printWord(words[i]);
         printf("\n");
     }
-
+    return 0; 
 }
+
+//abcde ab cde ac cc bb daca bababa wac aaaa.
+//z x y v w q r z m n s x a a b c a c d e f g a h.
+//ab bcda.
