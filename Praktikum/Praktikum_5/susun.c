@@ -5,16 +5,8 @@
 */
 
 #include <stdio.h>
-#include "charmachine.c"
-#include "wordmachine.c"
-
-// Prints word from Mesin Kata
-int printWord(Word word) {
-    int i;
-    for (i = 0; i < word.Length; i++) {
-        printf("%c", word.TabWord[i]);
-    }
-}
+#include "charmachine.h"
+#include "wordmachine.h"
 
 int main(){
     Word words[100];
@@ -30,97 +22,65 @@ int main(){
         ADVWORD();
     }
     int i,j,k,l;
-
-    // Sort berdasarkan panjang kata
-    boolean sortPanjang = false;
-    while(!sortPanjang){
-        int countcorrect = 0;
+    boolean sorted = false;
+    while (!sorted){
+        /* Periksa apakah semua kata sudah terurut atau belum */
+        int countCorrect = 0;
         for(i = 0; i < wordCount-1; i++){
-            if(words[i].Length <= words[i+1].Length){
-                countcorrect ++;
-            }
-        }    
-        if(countcorrect == wordCount-1){
-            sortPanjang = true;
-        }
-        else{
-            for(i = 0; i < wordCount-1; i++){
-                if(words[i].Length > words[i+1].Length){
-                    Word temp = words[i];
-                    words[i] = words[i+1];
-                    words[i+1] = temp;
-                }
-            }  
-        }
-    }
-    // Sort berdasarkan karakter
-    int currentIdx = 0;
-    for(int len = words[0].Length; len < maxWordLength+1; len++){
-        int idxStart = currentIdx;
-        while(words[currentIdx].Length == len && currentIdx < wordCount){
-            currentIdx ++;
-        }
-        int idxEnd = currentIdx-1;
-        if(idxEnd < idxStart){
-            idxEnd = idxStart;
-        }
-        boolean sortString = false;
-        printf("len: %d ====================\n",len);
-        while(!sortString){
-            printf("-------------\n");
-            int countCorrect = 0;
-            for(i = idxStart; i < idxEnd+1; i ++){
-                for(j=0; j<wordCount ; j++){
-                    printWord(words[j]);
-                    printf("-");
-                } printf("\n");
-                j = 0;
-                boolean checked = false;
-                while(!checked && j < len-1){
-                    printf("idx : %d , %d %c vs %d %c\n",i,(int)words[i].TabWord[j],words[i].TabWord[j],(int)words[i+1].TabWord[j],words[i+1].TabWord[j]);
-                    if((int)words[i].TabWord[j] < (int)words[i+1].TabWord[j]){
+            boolean checked = false;
+            int charIdx = 0;
+            while(!checked){
+                if((int)words[i].TabWord[charIdx] < (int)words[i+1].TabWord[charIdx]){
+                    countCorrect ++;
+                    checked = true;
+                } else if((int)words[i].TabWord[charIdx] > (int)words[i+1].TabWord[charIdx]){
+                    checked = true;
+                } else{
+                    charIdx++;
+                    if((charIdx == words[i].Length && words[i].Length == words[i+1].Length) || charIdx == words[i].Length){
+                        checked = true;
                         countCorrect ++;
+                    } else if(charIdx == words[i+1].Length){
                         checked = true;
-                    } else if((int)words[i].TabWord[j] > (int)words[i+1].TabWord[j]){
-                        checked = true;
-                    }  else if(j == len-1){
-                        countCorrect ++; 
-                        checked = true;
-                    } else{
-                        j++;
-                    }
-                    printf("-> %d\n",countCorrect);
-                }
+                    } 
+                }        
             }
-            printf("%d != %d  start: %d  end: %d\n",countCorrect,idxEnd-idxStart,idxStart,idxEnd);
-            if(countCorrect != idxEnd-idxStart && idxStart != idxEnd){
-                for(i = idxStart; i < idxEnd; i ++){
-                    j = 0;
-                    boolean checked = false;
-                    while(!checked && j < len){
-                        if((int)words[i].TabWord[j] > (int)words[i+1].TabWord[j]){
+        }
+        if(countCorrect != wordCount-1){
+            for(i = 0; i < wordCount-1; i++){
+                boolean checked = false;
+                int charIdx = 0;
+                while(!checked && charIdx < words[i].Length){
+                    if((int)words[i].TabWord[charIdx] < (int)words[i+1].TabWord[charIdx]){
+                        checked = true;
+                    } else if((int)words[i].TabWord[charIdx] > (int)words[i+1].TabWord[charIdx]){
+                        // swapped
+                        checked = true;
+                        Word temp = words[i];
+                        words[i] = words[i+1];
+                        words[i+1] = temp;
+                    } else{
+                        charIdx++;
+                        if((charIdx == words[i].Length && words[i].Length == words[i+1].Length) || charIdx == words[i].Length){
+                            checked = true;
+                        } else if(charIdx == words[i+1].Length){
+                            checked = true;
                             Word temp = words[i];
                             words[i] = words[i+1];
                             words[i+1] = temp;
-                            checked = true;
-                            printWord(words[i+1]);
-                            printf("==swapped==");
-                            printf("/n");
-                            printWord(words[i]);
-                        } else if(j == len-1 || (int)words[i].TabWord[j] < (int)words[i+1].TabWord[j]){
-                            checked = true;
-                        } else if((int)words[i].TabWord[j] == (int)words[i+1].TabWord[j]){
-                            j++;
-                        }
-                    }
+                        } 
+                    }        
                 }
-            } else{
-                sortString = true;
             }
+        }else{
+            sorted = true;
         }
     }
-    for(i=0; i<wordCount ; i++){
-        printWord(words[i]);
+
+    for(i=0; i<wordCount; i++){
+        for (j = 0; j < words[i].Length; j++) {
+            printf("%c", words[i].TabWord[j]);
+        }
         printf("\n");
     }
     return 0; 
