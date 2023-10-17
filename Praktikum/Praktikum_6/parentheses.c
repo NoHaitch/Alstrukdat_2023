@@ -41,15 +41,18 @@ int main(){
     int i = 0;
     boolean valid = true;
     while(valid && i < input.Length){
+        // jika kurung buka maka bisa di masukkan ke dalam Stack dan kedalaman ditambah
         if(input.TabWord[i] == '('){
             depth++;
             Push(&S,'(');
-        } else{
+        } else{ // karena karakter adalah kurung tutup (")") 
             if(InfoTop(S) == '('){
+                // karena ada pasangan kurung buka maka kurung buka yang sudah berpasangan dapat dihilangkan
                 depth--;
                 char temp;
                 Pop(&S,&temp);
             } else{
+                // karena tidak memiliki pasangan maka kurung tidak valid
                 valid = false;
             }
         }
