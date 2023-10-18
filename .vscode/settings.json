@@ -8,6 +8,7 @@
     "liststatik.h": "c",
     "matrix.h": "c",
     "charmachine.h": "c",
-    "wordmachine.h": "c"
+    "wordmachine.h": "c",
+    "stack.h": "c"
   }
 }
