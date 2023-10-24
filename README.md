@@ -33,7 +33,7 @@ cd Praktikum/Praktikum_X
 #include "time.h"  
 ```  
    
-7. Build
+5. Build
 ```bash
 # Dengan Mingw
 gcc nama_file.c -o nama_file_hasil
