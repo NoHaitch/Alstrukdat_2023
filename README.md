@@ -1,8 +1,8 @@
 <div align="center">
-<h1>Mata Kuliah Algoritma dan Stuktur Data 2023</h1>
-<b>Semua program, materi dan data Mata Kuliah Algoritma dan Struktur Data</b>
+<h1>Mata Kuliah IF2110 Algoritma dan Stuktur Data 2023</h1>
+<b>Semua program, materi dan data Mata Kuliah IF2110 Algoritma dan Struktur Data</b>
 <br>
-<h3> Praktikum Menggunakan Bahasa C</h3>
+<h3> Praktikum Menggunakan Bahasa C dengan Basis ADT (Abstract Data Type) </h3>
 </div> 
   
 ## Oleh : 
