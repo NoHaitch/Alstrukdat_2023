@@ -1,6 +1,6 @@
 /*  Nama : Raden Francisco Trianto Bratadiningrat
     NIM : 13522091
-    tanggal : 3 Oktober 2023
+    tanggal : 6 Oktober 2023
     Soal No : 1
 */
 #include <stdio.h>
