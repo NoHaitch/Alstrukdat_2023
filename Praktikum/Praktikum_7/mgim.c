@@ -1,43 +1,60 @@
+/*  Nama : Raden Francisco Trianto Bratadiningrat
+    NIM : 13522091
+    tanggal : 3 Oktober 2023
+    Soal No : 3
+*/
+
 #include <stdio.h>
-#include "queue.h"
+#include "queue.c"
+
+int getStep(int x){
+    int count = 0;
+    while(x != 0){
+        printf("%d-",x);
+        int div = 2;
+        boolean found = false;
+        while(!found && div < x-1){
+            if(x%div == 0){
+                found = true;
+                x = x / div;
+                count ++;
+            }
+            div ++;
+        }
+        if(!found){
+            count ++;
+            x --;
+        }
+    }
+    printf("%d ",x);
+    return count;
+}
 
 int main(){
     int N;
     scanf("%d",&N);
-    int i;
+    int i, j, x;
     Queue Q;
     CreateQueue(&Q);
-    for(i = 0; i<N; i++){
-        int ni;
-        int count = 0;
-        scanf("%d",&ni);
-        int min = ni;
-        while(ni != 0){
-            int div = 2;
-            boolean found = false;
-            while(!found && div < ni-1){
-                if(ni%div == 0){
-                    found = true;
-                    ni = ni / div;
-                    count ++;
-                }
-                div ++;
+    for(j = 0; j < N; j++){
+        scanf("%d",&x);
+        int minStep = x;
+        int currStep = 0;
+        for(i = 0; i < x; i++){
+            currStep = i + getStep(x-i);
+            if(currStep < minStep){
+                minStep = currStep;
             }
-            if(!found){
-                count ++;
-                ni --;
-            }
+            printf("> %d\n",currStep);
         }
-        if(count < min){
-            min = count;
-        }
-        enqueue(&Q,min);
+        enqueue(&Q,minStep);
+        printf("%d ---> %d\n",x,minStep);
     }
     int res = 1;
     while(!isEmpty(Q)){
-        int val;
-        dequeue(&Q,&val);
-        res *= val;
+        int temp;
+        dequeue(&Q,&temp);
+        res = res * temp;
     }
     printf("%d\n",res);
 }

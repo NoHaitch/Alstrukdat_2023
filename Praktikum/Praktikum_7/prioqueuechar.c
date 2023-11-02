@@ -1,3 +1,9 @@
+/*  Nama : Raden Francisco Trianto Bratadiningrat
+    NIM : 13522091
+    tanggal : 3 Oktober 2023
+    Soal No : 2
+*/
+
 /* File : prioqueuechar.h */
 /* Definisi ADT Priority Queue Char dengan representasi array secara eksplisit dan alokasi dinamik */
 /* Model Implementasi Versi III dengan circular buffer */
@@ -27,9 +33,9 @@ int NBElmt (PrioQueueChar Q)
     if(IsEmpty(Q)){
         return 0;
     } else if(Tail(Q) >= Head(Q)){
-        return Tail(Q)-Head(Q) + 1;
+        return Tail(Q) - Head(Q) + 1;
     } else {
-        return Tail(Q)-Head(Q) + MaxEl(Q) + 1;
+        return MaxEl(Q) - (Head(Q) - (Tail(Q) + 1));
     }
 }
 
@@ -41,9 +47,15 @@ void MakeEmpty (PrioQueueChar * Q, int Max)
 /* atau : jika alokasi gagal, Q kosong dg MaxEl=0 */
 /* Proses : Melakukan alokasi, membuat sebuah Q kosong */
 {
-    MaxEl(*Q) = Max + 1;
-    Head(*Q) = Nil;
-    Tail(*Q) = Nil;
+    (*Q).T = (infotype *) malloc((Max) * sizeof(infotype));
+    if ((*Q).T == NULL) {
+        MaxEl(*Q) = 0;
+    }
+    else {
+        Head(*Q) = Nil;
+        Tail(*Q) = Nil;
+        MaxEl(*Q) = Max;
+    }
 }
 
 /* *** Destruktor *** */
@@ -52,7 +64,10 @@ void DeAlokasi(PrioQueueChar * Q)
 /* I.S. Q pernah dialokasi */
 /* F.S. Q menjadi tidak terdefinisi lagi, MaxEl(Q) diset 0 */
 {    
+    Head(*Q) = Nil;
+    Tail(*Q) = Nil;
     MaxEl(*Q) = 0;
+    free((*Q).T);
 }
 
 /* *** Primitif Add/Delete *** */
@@ -62,31 +77,37 @@ void Enqueue (PrioQueueChar * Q, infotype X)
 /* F.S. X disisipkan pada posisi yang tepat sesuai dengan prioritas,
         TAIL "maju" dengan mekanisme circular buffer; */
 {
-    if(IsEmpty(*Q)){
+
+    int i, j;
+    if (IsEmpty(*Q)) {
         Head(*Q) = 0;
         Tail(*Q) = 0;
-        MaxEl(*Q) ++;
-    } else{
-        boolean found;
-        int idx = 0;
-        while(Prio(X) >= Prio(Elmt(*Q,idx)) && idx<NBElmt(*Q)){
-            idx ++;
-        }
-        if(idx == NBElmt(*Q)){
-            Elmt(*Q,idx) = X;
-            MaxEl(*Q) ++;
-            Tail(*Q) ++;
+        InfoTail(*Q) = X;
+    }
+    else {
+        if(Tail(*Q) == MaxEl(*Q) - 1){
+            Tail(*Q) = 0;
         }
         else{
-            // shift right
-            MaxEl(*Q) ++;
             Tail(*Q) ++;
-            // from tail to idx shift right
-            int i;
-            for(i = Tail(*Q); i != idx;i--){
-                Elmt(*Q,i) = Elmt(*Q,i-1);
+        }
+        InfoTail(*Q) = X;
+        i = Tail(*Q);
+        if(i == 0){
+            j = MaxEl(*Q) - 1;
+        } else{
+            j = i - 1;
+        }
+        while (i != Head(*Q) && Prio(Elmt(*Q, i)) < (Prio(Elmt(*Q, j)))) {
+            infotype temp = Elmt(*Q, i);
+            Elmt(*Q, i) = Elmt(*Q, j);
+            Elmt(*Q, j) = temp;
+            i = j;
+            if(i == 0){
+                j = MaxEl(*Q) - 1;
+            } else{
+                j = i - 1;
             }
-            Elmt(*Q,idx) = X;
         }
     }
 }
@@ -97,11 +118,19 @@ void Dequeue (PrioQueueChar * Q, infotype * X)
 /* F.S. X = nilai elemen HEAD pd I.S., HEAD "maju" dengan mekanisme circular buffer;
         Q mungkin kosong */
 {
-    X = Head(*Q);
-    if(Head(*Q) == MaxEl(*Q)-1){
-        Head(*Q) = 0;
-    }else{
-        Head(*Q) ++;
+    if (NBElmt(*Q) == 1) {
+        *X = InfoHead(*Q);
+        Head(*Q) = Nil;
+        Tail(*Q) = Nil;
+    }
+    else {
+        *X = InfoHead(*Q);
+        if(Head(*Q) == MaxEl(*Q)-1){
+            Head(*Q) = 0;
+        }
+        else{
+            Head(*Q)++;
+        }
     }
 }
 
@@ -116,10 +145,14 @@ void PrintPrioQueueChar (PrioQueueChar Q)
 #
 */
 {
-    int i;
-    for(int i=0 ; i<NBElmt(Q); i++){
-        infotype val;
-        Dequeue(&Q,&val);
-        printf("%d %d\n",Prio(val), Info(val));
+    infotype val;
+    PrioQueueChar temp = Q;
+    if (!IsEmpty(Q)) {
+        while (!IsEmpty(temp)) {
+            Dequeue(&temp, &val);
+            printf("%d %c\n", Prio(val), Info(val));
+        }
     }
+    printf("#\n");
+
 }
