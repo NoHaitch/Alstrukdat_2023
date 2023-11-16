@@ -10,6 +10,7 @@
     "charmachine.h": "c",
     "wordmachine.h": "c",
     "stack.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "stacklinked.h": "c"
   }
 }
