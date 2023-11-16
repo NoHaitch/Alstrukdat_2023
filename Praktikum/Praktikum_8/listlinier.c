@@ -2,9 +2,10 @@
     NIM : 13522091
     tanggal : 27 Oktober 2023
     Soal No : Pra - 1
+    Extended Soal No : 2
 */
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 #include "listlinier.h"
 
 Address newNode(ElType val)
@@ -244,3 +245,108 @@ List concat(List l1, List l2)
     }
     return l3;
 }
+
+/****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
+boolean fSearch(List L, Address P)
+/* Mencari apakah ada elemen list yang beralamat P */
+/* Mengirimkan true jika ada, false jika tidak ada */
+{
+    Address p = FIRST(L);
+    if(p == P){
+        return true;
+    } else{
+        boolean found = false;
+        while (p != NULL && !found) {
+            if (p == P) {
+                found = true;
+            }
+            p = NEXT(p);
+        }
+        return found;
+    }
+}
+
+Address searchPrec(List L, ElType X)
+/* Mengirimkan address elemen sebelum elemen yang nilainya=X */
+/* Mencari apakah ada elemen list dengan Info(P)=X */
+/* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */
+/* Jika tidak ada, mengirimkan Nil */
+/* Jika P adalah elemen pertama, maka Prec=Nil */
+/* Search dengan spesifikasi seperti ini menghindari */
+/* traversal ulang jika setelah Search akan dilakukan operasi lain */
+{
+    if(isEmpty(L) || length(L) == 1){
+        return NULL;
+    }
+    Address p = L;
+    Address previous;
+    while(p != NULL && INFO(p)!= X){
+        previous = p;
+        p = NEXT(p);
+    }
+    if(p == NULL){
+        return NULL;
+    }
+    else{
+        return previous;
+    }
+}
+
+/*** Prekondisi untuk Max/Min/Rata-rata : List tidak kosong ***/
+ElType maxValue(List l)
+/* Mengirimkan nilai info(P) yang maksimum */
+{
+    Address p = FIRST(l);
+    int max = INFO(l);
+    while(p != NULL){
+        if(INFO(p) > max){
+            max = INFO(p);
+        }
+        p = NEXT(p);
+    }
+    return max;
+}
+
+Address adrMax(List l){}
+/* Mengirimkan address P, dengan info(P) yang bernilai maksimum */
+ElType minValue(List l)
+/* Mengirimkan nilai info(P) yang minimum */
+{
+    Address p = FIRST(l);
+    int min = INFO(l);
+    while(p != NULL){
+        if(INFO(p) < min){
+            min = INFO(p);
+        }
+        p = NEXT(p);
+    }
+    return min;
+}
+
+Address adrMin(List l){}
+/* Mengirimkan address P, dengan info(P) yang bernilai minimum */
+float average(List L)
+/* Mengirimkan nilai rata-rata info(P) */
+{
+    Address p = FIRST(L);
+    float sum = 0;
+    while(p != NULL){
+        sum += INFO(p);
+        p = NEXT(p);
+    }
+    return sum/(float)length(L);
+}
+
+/***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
+void deleteAll(List *l){}
+/* Delete semua elemen list dan alamat elemen di-dealokasi */
+void copyList(List *l1, List *l2){}
+/* I.S. L1 sembarang. F.S. L2=L1 */
+/* L1 dan L2 "menunjuk" kepada list yang sama.*/
+/* Tidak ada alokasi/dealokasi elemen */
+
+void inverseList(List *l){}
+/* I.S. sembarang. */
+/* F.S. elemen list dibalik : */
+/* Elemen terakhir menjadi elemen pertama, dan seterusnya. */
+/* Membalik elemen list, tanpa melakukan alokasi/dealokasi. */

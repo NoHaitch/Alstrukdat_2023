@@ -11,6 +11,7 @@
     "wordmachine.h": "c",
     "stack.h": "c",
     "stdlib.h": "c",
-    "stacklinked.h": "c"
+    "stacklinked.h": "c",
+    "listlinier.h": "c"
   }
 }

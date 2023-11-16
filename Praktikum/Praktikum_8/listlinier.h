@@ -111,4 +111,44 @@ List concat(List l1, List l2) ;
 /* Konkatenasi dua buah list : l1 dan l2    */
 /* menghasilkan l3 yang baru (dengan elemen list l1 dan l2 secara beurutan). */
 /* Tidak ada alokasi/dealokasi pada prosedur ini */
+
+/****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
+boolean fSearch(List L, Address P);
+/* Mencari apakah ada elemen list yang beralamat P */
+/* Mengirimkan true jika ada, false jika tidak ada */
+Address searchPrec(List L, ElType X);
+/* Mengirimkan address elemen sebelum elemen yang nilainya=X */
+/* Mencari apakah ada elemen list dengan Info(P)=X */
+/* Jika ada, mengirimkan address Prec, dengan Next(Prec)=P dan Info(P)=X. */
+/* Jika tidak ada, mengirimkan Nil */
+/* Jika P adalah elemen pertama, maka Prec=Nil */
+/* Search dengan spesifikasi seperti ini menghindari */
+/* traversal ulang jika setelah Search akan dilakukan operasi lain */
+
+/*** Prekondisi untuk Max/Min/Rata-rata : List tidak kosong ***/
+ElType maxValue(List l);
+/* Mengirimkan nilai info(P) yang maksimum */
+Address adrMax(List l);
+/* Mengirimkan address P, dengan info(P) yang bernilai maksimum */
+ElType minValue(List l);
+/* Mengirimkan nilai info(P) yang minimum */
+Address adrMin(List l);
+/* Mengirimkan address P, dengan info(P) yang bernilai minimum */
+float average(List L);
+/* Mengirimkan nilai rata-rata info(P) */
+
+/***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
+void deleteAll(List *l);
+/* Delete semua elemen list dan alamat elemen di-dealokasi */
+
+void copyList(List *l1, List *l2);
+/* I.S. L1 sembarang. F.S. L2=L1 */
+/* L1 dan L2 "menunjuk" kepada list yang sama.*/
+/* Tidak ada alokasi/dealokasi elemen */
+
+void inverseList(List *l);
+/* I.S. sembarang. */
+/* F.S. elemen list dibalik : */
+/* Elemen terakhir menjadi elemen pertama, dan seterusnya. */
+/* Membalik elemen list, tanpa melakukan alokasi/dealokasi. */
 #endif
