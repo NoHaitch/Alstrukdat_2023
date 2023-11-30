@@ -307,8 +307,22 @@ ElType maxValue(List l)
     return max;
 }
 
-Address adrMax(List l){}
+Address adrMax(List l)
 /* Mengirimkan address P, dengan info(P) yang bernilai maksimum */
+{
+    Address p = FIRST(l);
+    Address maxAddr = FIRST(l);
+    int max = INFO(l);
+    while(p != NULL){
+        if(INFO(p) > max){
+            max = INFO(p);
+            maxAddr = p;
+        }
+        p = NEXT(p);
+    }
+    return maxAddr;
+}
+
 ElType minValue(List l)
 /* Mengirimkan nilai info(P) yang minimum */
 {
@@ -323,30 +337,78 @@ ElType minValue(List l)
     return min;
 }
 
-Address adrMin(List l){}
+Address adrMin(List l)
 /* Mengirimkan address P, dengan info(P) yang bernilai minimum */
+{
+    Address p = FIRST(l);
+    Address minAddr = FIRST(l);
+    int min = INFO(l);
+    while(p != NULL){
+        if(INFO(p) < min){
+            min = INFO(p);
+            minAddr = p;
+        }
+        p = NEXT(p);
+    }
+    return minAddr;
+}
+
 float average(List L)
 /* Mengirimkan nilai rata-rata info(P) */
 {
     Address p = FIRST(L);
     float sum = 0;
+    int count = 0;
     while(p != NULL){
         sum += INFO(p);
         p = NEXT(p);
+        count++;
     }
-    return sum/(float)length(L);
+    if (count > 0) {
+        return sum / count;
+    } else {
+        return 0;
+    }
 }
 
 /***************** FUNGSI dan PROSEDUR TAMBAHAN **************/
-void deleteAll(List *l){}
+void deleteAll(List *l)
 /* Delete semua elemen list dan alamat elemen di-dealokasi */
-void copyList(List *l1, List *l2){}
+{
+    Address p = FIRST(*l);
+    Address temp;
+    while (p != NULL) {
+        temp = p;
+        p = NEXT(p);
+        free(temp);
+    }
+    FIRST(*l) = NULL;  // Set list to empty
+}
+
+void copyList(List *l1, List *l2)
 /* I.S. L1 sembarang. F.S. L2=L1 */
 /* L1 dan L2 "menunjuk" kepada list yang sama.*/
 /* Tidak ada alokasi/dealokasi elemen */
+{
+    FIRST(*l2) = FIRST(*l1);
+}
 
-void inverseList(List *l){}
+void inverseList(List *l)
 /* I.S. sembarang. */
 /* F.S. elemen list dibalik : */
 /* Elemen terakhir menjadi elemen pertama, dan seterusnya. */
 /* Membalik elemen list, tanpa melakukan alokasi/dealokasi. */
+{
+    Address current = FIRST(*l);
+    Address prev = NULL;
+    Address next;
+
+    while (current != NULL) {
+        next = NEXT(current);
+        NEXT(current) = prev;
+        prev = current;
+        current = next;
+    }
+
+    FIRST(*l) = prev;
+}

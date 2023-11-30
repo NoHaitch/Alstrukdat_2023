@@ -14,21 +14,25 @@ void splitList(List source, List* front, List* back)
    3 elemen dan list back memiliki 2 elemen.
 */
 {
-    int idxfront = 0;
-    int idxback = (length(source)/2);
-    if(length(source) % 2 != 0){
-        idxback ++;
-    } 
-    while(idxfront < idxback){
-        insertLast(front,getElmt(source,idxfront));
-        idxfront++;
+    int len = length(source);
+    if(len % 2 == 1){
+        len++;
     }
-    while(idxback < length(source)){
-        insertLast(back,getElmt(source,idxback));
-        idxback++;
+    int mid = len / 2;
+
+    *front = source;
+    *back = NULL;
+
+    if (len > 1) {
+        Address p = source;
+        for (int i = 0; i < mid - 1; i++) {
+            p = NEXT(p);
+        }
+
+        *back = NEXT(p);
+        NEXT(p) = NULL;
     }
 }
-
 
 List merge(List a, List b)
 /* Fungsi untuk melakukan merge sort list a dan b secara rekursif.
@@ -39,23 +43,30 @@ List merge(List a, List b)
    INFO(b) untuk mendapatkan urutannya
 */
 {
-    if(length(a) == 1 && length(b) == 1){
-        displayList(a);
-        printf("\n");
-        displayList(b);
-        printf("\n");
-    }
-    if(a == NULL){
-        return b;
-    } else if(b == NULL){
-        return a;
-    } else{
-        if(INFO(a) <= INFO(b)){
-            return concat(a,b);
-        } else{
-            return concat(b,a);
+    List result = NULL;
+    Address p1 = a, p2 = b;
+
+    while (p1 != NULL && p2 != NULL) {
+        if (INFO(p1) <= INFO(p2)) {
+            result = concat(result, newNode(INFO(p1)));
+            p1 = NEXT(p1);
+        } else {
+            result = concat(result, newNode(INFO(p2)));
+            p2 = NEXT(p2);
         }
     }
+
+    while (p1 != NULL) {
+        result = concat(result, newNode(INFO(p1)));
+        p1 = NEXT(p1);
+    }
+
+    while (p2 != NULL) {
+        result = concat(result, newNode(INFO(p2)));
+        p2 = NEXT(p2);
+    }
+
+    return result;
 }
 
 void mergeSort(List* list)
@@ -69,15 +80,15 @@ void mergeSort(List* list)
 {
     displayList(*list);
     printf("\n");
-    List front, back;
-    CreateList(&front);
-    CreateList(&back);
-    splitList(*list,&front,&back);
-    if(length(front) > 1){
-        mergeSort(&front);
+    if (isEmpty(*list) || NEXT(*list) == NULL) {
+        return;
+    } else {
+        List l1, l2;
+        splitList(*list, &l1, &l2);
+
+        mergeSort(&l1);
+        mergeSort(&l2);
+
+        *list = merge(l1, l2);
     }
-    if(length(back) > 1){
-        mergeSort(&back);
-    }
-    *list = merge(front,back);
 }
