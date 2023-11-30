@@ -1,10 +1,13 @@
 /*  Nama : Raden Francisco Trianto Bratadiningrat
     NIM : 13522091
-    tanggal : 17 November 2023
+    tanggal : 17 November 2023 
     Soal No : Pra - 1
+    Soal No : 1
 */
 
 #include "listrec.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* Manajemen Memori */
 Address newNode(ElType x)
@@ -136,5 +139,122 @@ void displayList(List l)
     if(!isEmpty(l)){
         printf("%d\n", head(l));
         displayList(tail(l));
+    }
+}
+
+/*** Tambahan primitif pemrosesan list ***/
+List insertAt(List l, ElType e, int idx)
+/* Fungsi untuk menambahkan e sebagai elemen pada posisi/index idx sebuah list l */
+{
+    if(idx == 0){
+        return konso(l,e);
+    }
+    else{
+        return konso(insertAt(NEXT(l), e, idx-1), INFO(l));
+    }
+}
+
+List deleteFirst(List l)
+/* Fungsi untuk menghapus elemen pertama sebuah list l */
+{
+    Address p = l;
+    l = NEXT(l);
+    free(p);
+    return l;
+}
+
+List deleteAt(List l, int idx)
+/* Fungsi untuk menghapus elemen pada posisi/index idx sebuah list l */
+{
+    if(idx == 0){
+        return deleteFirst(l);
+    } else{
+        return konso(deleteAt(NEXT(l),idx-1),INFO(l));
+    }
+}
+
+List deleteLast(List l)
+/* Fungsi untuk menghapus elemen terakhir sebuah list l */
+{
+    return deleteAt(l, length(l)-1);
+}
+
+/*** Operasi-Operasi Lain ***/
+List inverseList (List l)
+/* Mengirimkan list baru, hasil invers dari l dengan menyalin semua elemen list.
+Semua elemen list baru harus dialokasi */
+/* Jika alokasi gagal, hasilnya list kosong */
+{
+    if (isEmpty(l)){
+        return l;
+    }
+    else if(isOneElmt(l)){
+        return l;
+    }
+    else{
+        return konsb(inverseList(tail(l)),head(l));
+    }
+}
+
+void splitPosNeg (List l, List *l1, List *l2)
+/* I.S. l mungkin kosong */
+/* F.S. Berdasarkan l, dibentuk dua buah list l1 dan l2 */ 
+/* l1 berisi semua elemen l yang positif atau 0, sedangkan l2 berisi
+semua elemen l yang negatif; semua dengan urutan yang sama seperti di l */
+/* l tidak berubah: Semua elemen l1 dan l2 harus dialokasi */
+/* Jika l kosong, maka l1 dan l2 kosong */
+{
+    if (isEmpty(l)){
+        *l1 = NULL;
+        *l2 = NULL;
+    }
+    else{
+        if (head(l) >= 0){
+            splitPosNeg(tail(l), l1, l2);
+            *l1 = konso(*l1,head(l));
+        }
+        else{
+            splitPosNeg(tail(l), l1, l2);
+            *l2 = konso(*l2,head(l));
+        }
+    }
+}
+
+void splitOnX (List l, ElType x, List *l1, List *l2)
+/* I.S. l dan x terdefinisi, l1 dan l2 sembarang. */
+/* F.S. l1 berisi semua elemen l yang lebih kecil dari x, dengan urutan
+kemunculan yang sama, l2 berisi semua elemen l yang tidak masuk ke
+l1, dengan urutan kemunculan yang sama. */
+{
+    if (isEmpty(l)){
+        *l1 = NULL;
+        *l2 = NULL;
+    }
+    else{
+        splitOnX(tail(l),x,l1,l2);
+        if (head(l) < x){
+            *l1 = konso(*l1,head(l));
+        }
+        else{
+            *l2 = konso(*l2, head(l));
+        }
+    }
+}
+
+List removeDuplicate(List l, List unique)
+/* l dan unique terdefinisi, l sembarang dan unique digunakan sebagai tempat menyimpan elemen unik */
+/* Mengembalikan list yang berisi elemen unik */
+/* Urutan masuk ke dalam list unique menggunakan konso */
+{
+    if(isOneElmt(l) && isMember(unique, head(l))){
+        return unique;
+    } else if(isOneElmt(l)){
+        unique = konso(unique,head(l));
+        return unique;
+    } else if(isMember(unique, head(l))){
+        return removeDuplicate(tail(l), unique);
+    } else{
+        unique = konso(unique,head(l));
+        return removeDuplicate(tail(l), unique);
     }
 }

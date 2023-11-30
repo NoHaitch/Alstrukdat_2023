@@ -13,6 +13,7 @@
     "stdlib.h": "c",
     "stacklinked.h": "c",
     "listlinier.h": "c",
-    "list_circular.h": "c"
+    "list_circular.h": "c",
+    "sort.h": "c"
   }
 }
