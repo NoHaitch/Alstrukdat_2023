@@ -210,3 +210,105 @@ Note: Anda boleh membuat fungsi tambahan untuk membuat implementasi fungsi ini j
 {
     printTreeWithDepth(p, h, 0);
 }
+
+int hitungNode(BinTree root)
+// Menerima sebuah pohon biner
+// Mengembalikan jumlah minimum node yang perlu ditambahkan
+{
+    if(isOneElmt(root)){
+        return 0;
+    } else if(isBinary(root)){
+        return hitungNode(LEFT(root)) + hitungNode(RIGHT(root));
+    } else if(isUnerLeft){
+        return 1 + hitungNode(LEFT(root));
+    } else {
+        return 1 + hitungNode(RIGHT(root));
+    }
+}
+
+int hitungBebekRec(BinTree root, int n, int curr){
+// hitung bebek yang rekursif dan menyimpan current bebek
+    if(curr == 0){
+        curr = ROOT(root);
+    } else{
+    curr = curr * ROOT(root);
+    }
+    if(isOneElmt(root)){
+        printf("      curr =  %d\n",curr);
+        if(n != curr){
+            return 0;
+        } else{
+            return curr % (10000);
+        }
+    } else if(isUnerLeft(root)){
+        printf("left  curr =  %d\n",curr);
+        return hitungBebekRec(LEFT(root), n, curr);
+    } else if(isUnerRight(root)){
+        printf("right curr =  %d\n",curr);
+        return hitungBebekRec(RIGHT(root), n, curr);
+    } else{
+        printf(" lr   curr =  %d\n",curr);
+        return hitungBebekRec(LEFT(root), n, curr) + hitungBebekRec(RIGHT(root), n, curr);;
+    }
+}
+
+int hitungBebek(BinTree root, int n)
+// Menerima sebuah pohon biner
+// Mengembalikan penjumlahan dari hasil kali antara bebek-bebek pada rute 
+{
+    if(isTreeEmpty(root)){
+        return 0;
+    } else{
+        return hitungBebekRec(root, n, 0);
+    }
+}
+
+int hitungUangRec(BinTree root, boolean isRobable){
+// Menghitung uang jumlah curian secara recursif
+    if(isOneElmt(root)){
+        if(isRobable){
+            return ROOT(root);
+        } else{
+            return 0;
+        }
+    } else if(isUnerLeft(root)){
+        if(isRobable){
+            return ROOT(root) + hitungUangRec(LEFT(root), !isRobable);
+        } else{
+            return hitungUangRec(LEFT(root), !isRobable);
+        }
+    } else if(isUnerRight(root)){
+        if(isRobable){
+            return ROOT(root) + hitungUangRec(RIGHT(root), !isRobable);
+        } else{
+            return hitungUangRec(RIGHT(root), !isRobable);
+        }
+    } else{
+        int robLeft = hitungUangRec(LEFT(root),!isRobable);
+        int robRight = hitungUangRec(RIGHT(root),!isRobable);
+        if(isRobable){
+            return robLeft + robRight + ROOT(root);
+        } else{
+            return robLeft + robRight;
+        }
+    }
+}
+
+int hitungUang(BinTree root)
+// Menerima sebuah pohon biner yang menyatakan denah perumahan
+// Mengembalikan jumlah maksimum uang yang bisa dicuri Burbir
+{
+    if(isTreeEmpty(root)){
+        return 0;
+    } else if(isOneElmt(root)){
+        return ROOT(root);
+    } else{
+        int a = hitungUangRec(root, true);
+        int b = hitungUangRec(root, false);
+        if(a >= b){
+            return a;
+        } else{
+            return b;
+        }
+    }
+}   
