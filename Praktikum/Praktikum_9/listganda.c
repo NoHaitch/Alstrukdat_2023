@@ -112,18 +112,25 @@ void insertAfterCurrent(ListGanda *l, ElType x)
     3. CURRENT menunjuk ke E
  */
 {
-    Address E = newNode(x);
-    if(E != NULL){
-        if(isEmpty(*l)){
-            CURRENT(*l) = E;
-            NEXT(E) = E;
-            PREV(E) = E;
-        } else{
-            Address p = CURRENT(*l);
-            NEXT(E) = NEXT(p);
-            PREV(NEXT(p)) = E;
-            NEXT(p) = E;
+    Address p = newNode(x);
+    if (p != NULL) {
+        if (isEmpty(*l)) {
+            // Jika list kosong, CURRENT menunjuk pada dirinya sendiri
+            NEXT(p) = p;
+            PREV(p) = p;
+        } else {
+            // Jika list tidak kosong
+            Address currentNext = NEXT(CURRENT(*l));
+
+            // Sisipkan node baru setelah CURRENT
+            NEXT(CURRENT(*l)) = p;
+            PREV(p) = CURRENT(*l);
+            NEXT(p) = currentNext;
+            PREV(currentNext) = p;
         }
+
+        // CURRENT menunjuk ke node baru
+        CURRENT(*l) = p;
     }
 }
 
@@ -135,14 +142,28 @@ void deleteCurrent(ListGanda *l, ElType *x)
     3. x berisi nilai E
     4. E dihapus
  */
-{   
-    Address E = CURRENT(*l);
-    *x = INFO(E);
-    if(isOneElement(*l)){
+{
+    // Elemen yang akan dihapus
+    Address p = CURRENT(*l);
+    *x = INFO(p);
+
+    if (NEXT(p) == p) {
+        // Jika CURRENT adalah satu-satunya elemen dalam list
+        free(p);
         CURRENT(*l) = NULL;
-    }else{
-        CURRENT(*l) = NEXT(E);
-        PREV(NEXT(E))= PREV(E);
+    } else {
+        // Jika CURRENT bukan satu-satunya elemen
+        Address currentPrev = PREV(p);
+        Address currentNext = NEXT(p);
+
+        // Hapus elemen CURRENT dari list
+        NEXT(currentPrev) = currentNext;
+        PREV(currentNext) = currentPrev;
+
+        // CURRENT menunjuk ke NEXT dari E (elemen yang dihapus)
+        CURRENT(*l) = currentNext;
+
+        // Hapus elemen yang dihapus
+        free(p);
     }
-    free(E);
 }

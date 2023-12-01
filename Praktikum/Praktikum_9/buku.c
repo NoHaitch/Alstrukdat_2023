@@ -5,50 +5,60 @@
 */
 
 #include <stdio.h>
-#include "list_circular.h"
+#include "list_circular.c"
 
-int main(){
+void deleteAt(List *l, int idx) {
+    if (isEmpty(*l)) {
+        return; // List is empty, nothing to delete
+    }
+
+    Address p = FIRST(*l);
+    Address prev = NULL;
+    int count = 0;
+
+    // Traverse the list to find the node at the specified index
+    while (count < idx) {
+        prev = p;
+        p = NEXT(p);
+        count++;
+    }
+
+    // Adjust the pointers to bypass the node at the specified index
+    if (prev == NULL) {
+        // Deleting the first node
+        FIRST(*l) = NEXT(p);
+    } else {
+        // Deleting a node other than the first
+        NEXT(prev) = NEXT(p);
+    }
+
+    // Deallocate the memory of the deleted node
+    deallocate(p);
+}
+
+int main() {
     int n, i;
-    scanf("%d",&n);
+    scanf("%d", &n);
     List l;
     CreateList(&l);
-    for(i=1; i<n+1; i++){
-        insertLast(&l,i);
+    for (i = 1; i < n + 1; i++) {
+        insertLast(&l, i);
     }
-    boolean shiftleft = false;
-    for(i=0; i<n-1; i++){
+    boolean shiftLeft = false;
+    int currIdx = 0;
+    for (i = 0; i < n - 1; i++) {
         int a;
-        scanf("%d",&a);
-        while (a != 0)
-        {
-            int temp;
-            if(a > 0){
-                // shift right
-                deleteFirst(&l,&temp);
-                insertLast(&l,temp);
-                a--;
-            } else{
-                // shift left
-                deleteLast(&l,&temp);
-                insertFirst(&l,temp);
-                a++;
-                shiftleft = true;
-            }
-        }
-        int val;
-        if(i == n-2){
-            int temp;
-            deleteLast(&l,&temp);
-            insertFirst(&l,temp);
-            shiftleft = false;
-        }
-        deleteFirst(&l, &val);
-        if(shiftleft){
-            int temp;
-            deleteLast(&l,&temp);
-            insertFirst(&l,temp);
-            shiftleft = false;
-        }
+        scanf("%d", &a);
+        currIdx = (currIdx + a);
+        printf("current id : %d\n",currIdx);
+        printf("before -> ");
+        displayList(l);
+        printf("\n");
+        deleteAt(&l, currIdx);
+        printf("after -> ");
+        displayList(l);
+        printf("\n");
     }
-    printf("%d\n",INFO(FIRST(l)));
+    printf("%d\n", INFO(FIRST(l)));
+    return 0;
 }
