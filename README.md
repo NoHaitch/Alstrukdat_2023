@@ -4,7 +4,7 @@
 <br>
 <h3> Praktikum Menggunakan Bahasa C dengan Basis ADT (Abstract Data Type) </h3>
 <br>
-<h3><a href="https://github.com/NoHaitch/Tugas-Besar-IF2110-Alstrukdat-2023"> Tugas Besar IF2110 Alstrukdat 2023 </a></h3>
+<h3><a href="https://github.com/mrsuiii/Tubes-Alstrukdat"> Tugas Besar IF2110 Alstrukdat 2023 </a></h3>
 </div> 
   
 ## Oleh : 
